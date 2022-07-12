@@ -30,6 +30,14 @@ class SignUpViewController: UIViewController {
         logInButton.setTitle("Log in", for: .normal)
         logInButton.setTitleColor(.purple, for: .normal)
         setupConstrains()
+        
+        signUpButton.addTarget(self, action: #selector(goToChats), for: .touchUpInside)
+    }
+    
+  @objc func goToChats() {
+        
+        let vc = MainTabBarController()
+        present(vc, animated: true)
     }
 }
 

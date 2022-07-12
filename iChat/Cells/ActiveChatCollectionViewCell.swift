@@ -7,11 +7,6 @@
 
 import UIKit
 
-protocol SelfConfiguringCell {
-    static var reuseId: String { get }
-    func configure(with value: MChat)
-}
-
 class ActiveChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     
     static var reuseId = "ActiveChatCollectionViewCell"
@@ -19,7 +14,7 @@ class ActiveChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     let friendImageView = UIImageView()
     let friendNameLabel = UILabel(text: "Name", textColor: .black, font: .laoSangamMN20()!)
     let lastMessageLabel = UILabel(text: "How are you?", textColor: .black, font: .laoSangamMN18()!)
-    let gradientView = UIView()
+    let gradientView = GradientView(from: .topLeading, to: .bottomTrailing, startColor: #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1), endColor: #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1))
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,7 +37,6 @@ class ActiveChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
 }
 
 extension ActiveChatCollectionViewCell {
-    
     
     private func setupConstrains() {
         addSubview(friendImageView)
@@ -67,7 +61,7 @@ extension ActiveChatCollectionViewCell {
             gradientView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             gradientView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             gradientView.heightAnchor.constraint(equalToConstant: 78),
-            gradientView.widthAnchor.constraint(equalToConstant: 8),
+            gradientView.widthAnchor.constraint(equalToConstant: 12),
             
             friendNameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 12),
             friendNameLabel.trailingAnchor.constraint(equalTo: gradientView.trailingAnchor, constant: 16),
@@ -77,9 +71,7 @@ extension ActiveChatCollectionViewCell {
             lastMessageLabel.trailingAnchor.constraint(equalTo: gradientView.trailingAnchor, constant: 16),
             lastMessageLabel.leadingAnchor.constraint(equalTo: friendImageView.trailingAnchor, constant: 12),
         ])
-      
     }
-    
 }
 
 import SwiftUI

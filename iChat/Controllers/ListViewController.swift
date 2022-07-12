@@ -31,6 +31,15 @@ class ListViewController: UIViewController {
     enum Section: Int, CaseIterable {
         case waitingChats
         case activeChats
+        
+        func description() -> String {
+            switch self {
+            case .waitingChats:
+                return "Waiting chats"
+            case .activeChats:
+                return "Active chats"
+            }
+        }
     }
     
     var dataSource: UICollectionViewDiffableDataSource<Section, MChat>?
@@ -72,7 +81,8 @@ class ListViewController: UIViewController {
         view.addSubview(collectionView)
         
         collectionView.register(ActiveChatCollectionViewCell.self, forCellWithReuseIdentifier: ActiveChatCollectionViewCell.reuseId)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell2")
+        collectionView.register(WaitingChatCollectionViewCell.self, forCellWithReuseIdentifier: WaitingChatCollectionViewCell.reuseId)
+        collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
     }
 }
 
@@ -98,11 +108,22 @@ extension ListViewController {
             case .activeChats:
                 return self.configure(cellType: ActiveChatCollectionViewCell.self, with: chat, for: indexPath)
             case .waitingChats:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell2", for: indexPath)
-                cell.backgroundColor = .systemPink
-                return cell
+                return self.configure(cellType: WaitingChatCollectionViewCell.self, with: chat, for: indexPath)
             }
         })
+        
+        dataSource?.supplementaryViewProvider = {
+            collectionView, kind, indexPath in
+            
+            guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseId, for: indexPath) as? SectionHeader else { return nil }
+            
+            guard let section = Section(rawValue: indexPath.section) else { return nil }
+            sectionHeader.configure(text: section.description(),
+                                    font: .laoSangamMN20(),
+                                    textColor: #colorLiteral(red: 0.5725490196, green: 0.5725490196, blue: 0.5725490196, alpha: 1))
+            
+            return sectionHeader
+        }
     }
 }
 
@@ -118,13 +139,16 @@ extension ListViewController {
                 fatalError("Unknown section kind")
             }
             switch section {
-            
             case .activeChats:
                 return self.createActiveChats()
             case .waitingChats:
                 return self.createWaitingChats()
             }
         }
+       
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.interSectionSpacing = 20
+        layout.configuration = config
         return layout
     }
     
@@ -141,6 +165,9 @@ extension ListViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 8
         section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 29, bottom: 0, trailing: 20)
+        
+        let sectionHeader = createSectionHeader()
+        section.boundarySupplementaryItems = [sectionHeader]
         return section
     }
     
@@ -163,7 +190,25 @@ extension ListViewController {
     
     section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 29, bottom: 0, trailing: 20)
     section.interGroupSpacing = 16
+    
+   let sectionHeader = createSectionHeader()
+    section.boundarySupplementaryItems = [sectionHeader]
     return section
+    
+    }
+    
+    private func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
+        
+        let sectionHeaderSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .estimated(1))
+        
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: sectionHeaderSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top)
+        
+        return sectionHeader
     }
 }
 

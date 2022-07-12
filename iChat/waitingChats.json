@@ -3,31 +3,31 @@
 [
 {
     "userName" : "Elena",
-    "userImageString" : "human2",
+    "userImageString" : "human6",
     "lastMessage" : "Is it here?",
     "id" : 6
 },
 {
     "userName" : "Adrian",
-    "userImageString" : "human4",
+    "userImageString" : "human7",
     "lastMessage" : "Nice to meet You!",
     "id" : 7
 },
 {
     "userName" : "Tom",
-    "userImageString" : "human5",
+    "userImageString" : "human8",
     "lastMessage" : "Hello!",
     "id" : 8
 },
 {
     "userName" : "Katrin",
-    "userImageString" : "human2",
+    "userImageString" : "human9",
     "lastMessage" : "My shoes is lovely",
     "id" : 9
 },
 {
     "userName" : "Irina",
-    "userImageString" : "human3",
+    "userImageString" : "human10",
     "lastMessage" : "What is her name?",
     "id" : 10
 }
