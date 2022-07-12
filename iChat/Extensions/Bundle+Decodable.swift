@@ -19,9 +19,10 @@ extension Bundle {
         }
         let decoder = JSONDecoder()
         
-        guard let decoded = try? decoder.decode(T.self, from: data) else {
+       guard let decoded = try? decoder.decode(T.self, from: data) else {
             fatalError("Failed to decode")
         }
+        
         return decoded
     }
 }

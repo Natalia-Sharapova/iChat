@@ -7,20 +7,6 @@
 
 import UIKit
 
-struct MChat: Hashable, Decodable {
-    var userName: String
-    var userImageString: String
-    var lastMessage: String
-    var id: Int
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    static func == (lhs: MChat, rhs: MChat) -> Bool {
-        return lhs.id == rhs.id
-    }
-}
-
 class ListViewController: UIViewController {
 
     var collectionView: UICollectionView!
@@ -89,15 +75,7 @@ class ListViewController: UIViewController {
 // MARK: - Setup data source
 
 extension ListViewController {
-    
-      private func configure<T: SelfConfiguringCell>(cellType: T.Type, with value: MChat, for indexPath: IndexPath) -> T {
-          guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellType.reuseId, for: indexPath) as? T else {
-              fatalError("Unable to dequeue \(cellType)")
-          }
-          cell.configure(with: value)
-          return cell
-      }
-    
+
     private func createDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, chat) in
             guard let section = Section(rawValue: indexPath.section) else {
@@ -106,9 +84,15 @@ extension ListViewController {
             
             switch section {
             case .activeChats:
-                return self.configure(cellType: ActiveChatCollectionViewCell.self, with: chat, for: indexPath)
+                return self.configure(collectionView: collectionView,
+                                 cellType: ActiveChatCollectionViewCell.self,
+                                 with: chat,
+                                 for: indexPath)
             case .waitingChats:
-                return self.configure(cellType: WaitingChatCollectionViewCell.self, with: chat, for: indexPath)
+                return self.configure(collectionView: collectionView,
+                                 cellType: WaitingChatCollectionViewCell.self,
+                                 with: chat,
+                                 for: indexPath)
             }
         })
         
