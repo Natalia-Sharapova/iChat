@@ -43,6 +43,7 @@
 		9B9FC4B9287F0AEB000396F0 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9FC4B8287F0AEB000396F0 /* ProfileViewController.swift */; };
 		9B9FC4BB287F194B000396F0 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9FC4BA287F194B000396F0 /* CustomTextField.swift */; };
 		9B9FC4BD287F25B8000396F0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9FC4BC287F25B8000396F0 /* UIView+Extension.swift */; };
+		9B9FC4BF287F4D6A000396F0 /* ChatRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9FC4BE287F4D69000396F0 /* ChatRequestViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,6 +85,7 @@
 		9B9FC4B8287F0AEB000396F0 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		9B9FC4BA287F194B000396F0 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		9B9FC4BC287F25B8000396F0 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		9B9FC4BE287F4D69000396F0 /* ChatRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +186,7 @@
 				9B7A78552879FC7E006D9C5F /* PeopleViewController.swift */,
 				9B7A78532879FC01006D9C5F /* MainTabBarController.swift */,
 				9B9FC4B8287F0AEB000396F0 /* ProfileViewController.swift */,
+				9B9FC4BE287F4D69000396F0 /* ChatRequestViewController.swift */,
 				9B7A784F2879FB43006D9C5F /* SignIn&Auth */,
 			);
 			path = Controllers;
@@ -287,6 +290,7 @@
 			files = (
 				9B90122528789FC000039D2B /* LoginViewController.swift in Sources */,
 				9B54CFAE2875F779002D0B30 /* AuthViewController.swift in Sources */,
+				9B9FC4BF287F4D6A000396F0 /* ChatRequestViewController.swift in Sources */,
 				9B54CFBE28760C9F002D0B30 /* UIButton+Extension.swift in Sources */,
 				9B989516287719F9008BA3F7 /* UIImageView+Extension.swift in Sources */,
 				9B435897287DE3710037C8D1 /* UIViewController+Extension.swift in Sources */,
