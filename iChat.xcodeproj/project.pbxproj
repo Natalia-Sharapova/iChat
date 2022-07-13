@@ -40,6 +40,9 @@
 		9B98951A2877373D008BA3F7 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9895192877373D008BA3F7 /* UIStackView+Extension.swift */; };
 		9B98951C28775453008BA3F7 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B98951B28775453008BA3F7 /* SignUpViewController.swift */; };
 		9B98951F287759E5008BA3F7 /* OneLineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B98951E287759E5008BA3F7 /* OneLineTextField.swift */; };
+		9B9FC4B9287F0AEB000396F0 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9FC4B8287F0AEB000396F0 /* ProfileViewController.swift */; };
+		9B9FC4BB287F194B000396F0 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9FC4BA287F194B000396F0 /* CustomTextField.swift */; };
+		9B9FC4BD287F25B8000396F0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9FC4BC287F25B8000396F0 /* UIView+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +81,9 @@
 		9B9895192877373D008BA3F7 /* UIStackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extension.swift"; sourceTree = "<group>"; };
 		9B98951B28775453008BA3F7 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		9B98951E287759E5008BA3F7 /* OneLineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneLineTextField.swift; sourceTree = "<group>"; };
+		9B9FC4B8287F0AEB000396F0 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		9B9FC4BA287F194B000396F0 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		9B9FC4BC287F25B8000396F0 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +138,7 @@
 			children = (
 				9B98951D28775934008BA3F7 /* UIKit */,
 				9B98951728771EA4008BA3F7 /* ButtonLabelView.swift */,
+				9B9FC4BA287F194B000396F0 /* CustomTextField.swift */,
 				9B98951E287759E5008BA3F7 /* OneLineTextField.swift */,
 				9B9012282878BCEF00039D2B /* PhotoView.swift */,
 				9B568DBD287B37EE008A5777 /* Bundle+Decodable.swift */,
@@ -176,6 +183,7 @@
 				9B7A78512879FB81006D9C5F /* ListViewController.swift */,
 				9B7A78552879FC7E006D9C5F /* PeopleViewController.swift */,
 				9B7A78532879FC01006D9C5F /* MainTabBarController.swift */,
+				9B9FC4B8287F0AEB000396F0 /* ProfileViewController.swift */,
 				9B7A784F2879FB43006D9C5F /* SignIn&Auth */,
 			);
 			path = Controllers;
@@ -200,6 +208,7 @@
 				9B9895192877373D008BA3F7 /* UIStackView+Extension.swift */,
 				9B7A784D2879EA10006D9C5F /* UISegmentedControl+Extension.swift */,
 				9B435896287DE3710037C8D1 /* UIViewController+Extension.swift */,
+				9B9FC4BC287F25B8000396F0 /* UIView+Extension.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -289,6 +298,8 @@
 				9B716B7A287CA4CC00BC8DE1 /* WaitingChatCollectionViewCell.swift in Sources */,
 				9B716B7F287CADC800BC8DE1 /* SectionHeader.swift in Sources */,
 				9B7A784E2879EA10006D9C5F /* UISegmentedControl+Extension.swift in Sources */,
+				9B9FC4B9287F0AEB000396F0 /* ProfileViewController.swift in Sources */,
+				9B9FC4BB287F194B000396F0 /* CustomTextField.swift in Sources */,
 				9B7A78542879FC01006D9C5F /* MainTabBarController.swift in Sources */,
 				9B716B7D287CA6EE00BC8DE1 /* SelfConfiguringCell.swift in Sources */,
 				9B54CFAA2875F779002D0B30 /* AppDelegate.swift in Sources */,
@@ -300,6 +311,7 @@
 				9B9012292878BCEF00039D2B /* PhotoView.swift in Sources */,
 				9B98951A2877373D008BA3F7 /* UIStackView+Extension.swift in Sources */,
 				9B54CFC128761173002D0B30 /* UIFont+Extension.swift in Sources */,
+				9B9FC4BD287F25B8000396F0 /* UIView+Extension.swift in Sources */,
 				9B833E59287D9C15004F6E98 /* MChat.swift in Sources */,
 				9B54CFAC2875F779002D0B30 /* SceneDelegate.swift in Sources */,
 				9B7A78522879FB81006D9C5F /* ListViewController.swift in Sources */,
