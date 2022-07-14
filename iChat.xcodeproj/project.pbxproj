@@ -194,8 +194,8 @@
 			children = (
 				9B54CFAD2875F779002D0B30 /* AuthViewController.swift */,
 				9B90122428789FC000039D2B /* LoginViewController.swift */,
-				9B9012262878B12300039D2B /* SetupProfileViewController.swift */,
 				9B98951B28775453008BA3F7 /* SignUpViewController.swift */,
+				9B9012262878B12300039D2B /* SetupProfileViewController.swift */,
 			);
 			path = "SignIn&Auth";
 			sourceTree = "<group>";

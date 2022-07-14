@@ -22,7 +22,8 @@ class SignUpViewController: UIViewController {
     let passwordTextField = OneLineTextField(font: .avenir20())
     let confirmPasswordTextField = OneLineTextField(font: .avenir20())
     
-
+    weak var delegate: AuthNavDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,6 +33,7 @@ class SignUpViewController: UIViewController {
         setupConstrains()
         
         signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+        logInButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
     }
     
   @objc func signUpButtonTapped() {
@@ -39,13 +41,19 @@ class SignUpViewController: UIViewController {
         switch result {
         
         case .success(let user):
-            self.showAlert(with: "Success", and: "You're successfully registered")
-            print(user.email)
+            self.showAlert(with: "Success", and: "You're successfully registered") {
+                self.present(SetupProfileViewController(), animated: true, completion: nil)
+            }
         case .failure(let error):
             self.showAlert(with: "Oops", and: "Something went wrong: \(error.localizedDescription)")
         }
     }
     }
+    @objc func loginButtonTapped() {
+        dismiss(animated: true) {
+            self.delegate?.toLoginVC()
+        }
+}
 }
 
 extension SignUpViewController {
@@ -111,9 +119,12 @@ struct SignUpContainerView: UIViewControllerRepresentable {
 
 extension UIViewController {
     
-    func showAlert(with title: String, and message: String) {
+    func showAlert(with title: String, and message: String, completion: @escaping () -> Void = {}) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+    
+        let okAction = UIAlertAction(title: "Ok", style: .default) { _ in
+            completion()
+        }
         alertController.addAction(okAction)
         present(alertController, animated: true, completion: nil)
     }

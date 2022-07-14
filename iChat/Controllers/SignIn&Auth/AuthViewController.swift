@@ -24,6 +24,10 @@ class AuthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        signUpVC.delegate = self
+        loginVC.delegate = self
+        
         setupConstrains()
         
         emailButton.addTarget(self, action: #selector(emailButtonTapped), for: .touchUpInside)
@@ -62,6 +66,17 @@ extension AuthViewController {
         stackView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 120).isActive = true
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40).isActive = true
+    }
+}
+
+extension AuthViewController: AuthNavDelegate {
+    
+    func toLoginVC() {
+        present(loginVC, animated: true, completion: nil)
+    }
+    
+    func toSignUpVC() {
+        present(signUpVC, animated: true, completion: nil)
     }
 }
 
