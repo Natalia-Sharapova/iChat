@@ -31,13 +31,20 @@ class SignUpViewController: UIViewController {
         logInButton.setTitleColor(.purple, for: .normal)
         setupConstrains()
         
-        signUpButton.addTarget(self, action: #selector(goToChats), for: .touchUpInside)
+        signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
     
-  @objc func goToChats() {
+  @objc func signUpButtonTapped() {
+    AuthService.shared.register(email: emailTextField.text, password: passwordTextField.text, confirmPassword: confirmPasswordTextField.text) { result in
+        switch result {
         
-        let vc = MainTabBarController()
-        present(vc, animated: true)
+        case .success(let user):
+            self.showAlert(with: "Success", and: "You're successfully registered")
+            print(user.email)
+        case .failure(let error):
+            self.showAlert(with: "Oops", and: "Something went wrong: \(error.localizedDescription)")
+        }
+    }
     }
 }
 
@@ -99,5 +106,15 @@ struct SignUpContainerView: UIViewControllerRepresentable {
         return viewController
     }
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+    }
+}
+
+extension UIViewController {
+    
+    func showAlert(with title: String, and message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
     }
 }

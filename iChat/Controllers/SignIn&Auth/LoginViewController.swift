@@ -22,7 +22,7 @@ class LoginViewController: UIViewController {
     let loginButton = UIButton(title: "Log in", cornerRadius: 5, backgroundColor: .black, titleColor: .white, font: .avenir20()!)
     let signInButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Sign in", for: .normal)
+        button.setTitle("Sign up", for: .normal)
         button.setTitleColor(.purple, for: .normal)
         button.titleLabel?.font = UIFont.avenir20()
         return button
@@ -32,14 +32,28 @@ class LoginViewController: UIViewController {
     let emailTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
-     setupConstrains()
+        view.backgroundColor = .white
+        setupConstrains()
         googleButton.customizeGoogleButton()
+        
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
     }
-
-}
+    
+    @objc func loginButtonTapped() {
+        
+        AuthService.shared.signIn(email: emailTextField.text, password: passwordTextField.text) { result in
+            switch result {
+            
+            case .success(let user):
+                self.showAlert(with: "Success", and: "You're successfully logged in")
+            case .failure(let error):
+                self.showAlert(with: "Oops", and: "Something went wrong: \(error.localizedDescription)")
+            }
+        }
+        }
+    }
 
 extension LoginViewController {
     
