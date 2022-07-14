@@ -51,6 +51,8 @@
 		9BBF7F8728802A2900698588 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9BBF7F8628802A2900698588 /* FirebaseAuth */; };
 		9BBF7F8928802A2900698588 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9BBF7F8828802A2900698588 /* FirebaseAnalyticsSwift */; };
 		9BBF7F8C2880360B00698588 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BBF7F8B2880360B00698588 /* AuthService.swift */; };
+		9BBF7F8E288064F600698588 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BBF7F8D288064F600698588 /* Validators.swift */; };
+		9BBF7F90288068AB00698588 /* AuthError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BBF7F8F288068AB00698588 /* AuthError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +97,8 @@
 		9B9FC4BE287F4D69000396F0 /* ChatRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestViewController.swift; sourceTree = "<group>"; };
 		9B9FC4C0287F6505000396F0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9BBF7F8B2880360B00698588 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		9BBF7F8D288064F600698588 /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
+		9BBF7F8F288068AB00698588 /* AuthError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +136,7 @@
 		9B54CFA82875F779002D0B30 /* iChat */ = {
 			isa = PBXGroup;
 			children = (
+				9BBF7F9128806EB900698588 /* Helpers */,
 				9BBF7F8A288035F700698588 /* Services */,
 				9B54CFA92875F779002D0B30 /* AppDelegate.swift */,
 				9B54CFAB2875F779002D0B30 /* SceneDelegate.swift */,
@@ -238,6 +243,15 @@
 				9BBF7F8B2880360B00698588 /* AuthService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		9BBF7F9128806EB900698588 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				9BBF7F8F288068AB00698588 /* AuthError.swift */,
+				9BBF7F8D288064F600698588 /* Validators.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -349,6 +363,7 @@
 				9B833E5B287D9C43004F6E98 /* MUser.swift in Sources */,
 				9B9012292878BCEF00039D2B /* PhotoView.swift in Sources */,
 				9B98951A2877373D008BA3F7 /* UIStackView+Extension.swift in Sources */,
+				9BBF7F8E288064F600698588 /* Validators.swift in Sources */,
 				9B54CFC128761173002D0B30 /* UIFont+Extension.swift in Sources */,
 				9BBF7F8C2880360B00698588 /* AuthService.swift in Sources */,
 				9B9FC4BD287F25B8000396F0 /* UIView+Extension.swift in Sources */,
@@ -356,6 +371,7 @@
 				9B54CFAC2875F779002D0B30 /* SceneDelegate.swift in Sources */,
 				9B7A78522879FB81006D9C5F /* ListViewController.swift in Sources */,
 				9B98951828771EA4008BA3F7 /* ButtonLabelView.swift in Sources */,
+				9BBF7F90288068AB00698588 /* AuthError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
