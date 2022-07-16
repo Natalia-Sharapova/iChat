@@ -14,6 +14,18 @@ class PeopleViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<Section, MUser>?
     let users = [MUser]()
     
+    private let currentUser: MUser
+    
+    init(currentUser: MUser) {
+        self.currentUser = currentUser
+        super.init(nibName: nil, bundle: nil)
+        title = currentUser.userName
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
    // let users = Bundle.main.decode(_type: [MUser].self, from: "users2.json")
    
     enum Section: Int, CaseIterable {

@@ -17,15 +17,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        //self.window?.rootViewController = PeopleViewController()
-       // window?.makeKeyAndVisible()
+        self.window?.rootViewController = MainTabBarController()
+        window?.makeKeyAndVisible()
         
-       if let user = Auth.auth().currentUser {
+     /*  if let user = Auth.auth().currentUser {
             FirestoreService.shared.getUserData(user: user) { result in
                 
                 switch result {
                 case .success(let muser):
-                    self.window?.rootViewController = MainTabBarController()
+                    let mainTabBarVC = MainTabBarController(currentUser: muser)
+                    mainTabBarVC.modalPresentationStyle = .fullScreen
+                    self.window?.rootViewController = mainTabBarVC
                 case .failure(let error):
                     self.window?.rootViewController = AuthViewController()
                     print(#line, #function, String(describing: error))
@@ -35,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             print("1234")
             window?.rootViewController = AuthViewController()
         }
-        window?.makeKeyAndVisible()
+        window?.makeKeyAndVisible()*/
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -9,7 +9,7 @@ import Foundation
 
 struct MChat: Hashable, Decodable {
     var userName: String
-    var userImageString: String
+    var avatarStringURL: String
     var lastMessage: String
     var id: Int
     

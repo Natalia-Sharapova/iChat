@@ -93,7 +93,7 @@ extension SignUpViewController {
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40).isActive = true
         
-        bottomStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 80).isActive = true
+        bottomStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 50).isActive = true
         bottomStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true
         bottomStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40).isActive = true
         bottomStackView.alignment = .firstBaseline
