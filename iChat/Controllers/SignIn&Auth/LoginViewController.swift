@@ -7,11 +7,6 @@
 
 import UIKit
 
-protocol AuthNavDelegate: AnyObject {
-   func toLoginVC()
-   func toSignUpVC()
-}
-
 class LoginViewController: UIViewController {
     
     // MARK: - Labels
@@ -55,8 +50,16 @@ class LoginViewController: UIViewController {
             switch result {
             
             case .success(let user):
-                self.showAlert(with: "Success", and: "You're successfully logged in")
-                self.present(SetupProfileViewController(), animated: true, completion: nil)
+                self.showAlert(with: "Success", and: "You're successfully logged in") {
+                FirestoreService.shared.getUserData(user: user) { result in
+                    switch result {
+                    case .success(let muser):
+                        self.present(MainTabBarController(), animated: true, completion: nil)
+                    case .failure(_):
+                        self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
+                    }
+                }
+                }
             case .failure(let error):
                 self.showAlert(with: "Oops", and: "Something went wrong: \(error.localizedDescription)")
             }
@@ -113,7 +116,7 @@ extension LoginViewController {
         welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 160).isActive = true
         welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
-        stackView.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 100).isActive = true
+        stackView.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 60).isActive = true
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40).isActive = true
         

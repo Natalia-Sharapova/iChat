@@ -2,31 +2,31 @@
 [
 {
     "userName" : "Max",
-    "userImageString" : "human1",
+    "avatarStringURL" : "human1",
     "lastMessage" : "How are you?",
     "id" : 1
 },
 {
     "userName" : "Nick",
-    "userImageString" : "human4",
+    "avatarStringURL" : "human4",
     "lastMessage" : "Just a second",
     "id" : 2
 },
 {
     "userName" : "Molly",
-    "userImageString" : "human5",
+    "avatarStringURL" : "human5",
     "lastMessage" : "Where are u?",
     "id" : 3
 },
 {
     "userName" : "Eva",
-    "userImageString" : "human2",
+    "avatarStringURL" : "human2",
     "lastMessage" : "Hi!",
     "id" : 4
 },
 {
     "userName" : "Adrian",
-    "userImageString" : "human3",
+    "avatarStringURL" : "human3",
     "lastMessage" : "It is my cat",
     "id" : 5
 }

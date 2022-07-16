@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SetupProfileViewController: UIViewController {
 
@@ -27,11 +28,45 @@ class SetupProfileViewController: UIViewController {
     // MARK: - Button
     let goToChatsButton = UIButton(title: "Go to chats!", cornerRadius: 5, backgroundColor: .black, titleColor: .white, font: .avenir20()!)
     
+    private let currentUser: User
+    
+    init(currentUser: User) {
+      
+        self.currentUser = currentUser
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupConstrains()
+        
+        goToChatsButton.addTarget(self, action: #selector(goToChatsButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func goToChatsButtonTapped() {
+        FirestoreService.shared.saveProfileWith(id: currentUser.uid,
+                                                email: currentUser.email!,
+                                                userName: fullNameTextField.text,
+                                                sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex),
+                                                avatarImageString: "nil",
+                                                description: aboutMeTextField.text) { result in
+            switch result {
+            
+            case .success(let muser):
+                self.showAlert(with: "Succeded!", and: "Have a nice conversation!") {
+                    self.present(MainTabBarController(), animated: true, completion: nil)
+                }
+                
+                print(#function, muser)
+            case .failure(let error):
+                self.showAlert(with: "Opps", and: error.localizedDescription)
+            }
+        }
     }
 }
 
@@ -108,7 +143,7 @@ struct SetupProfileViewControllerProvider: PreviewProvider {
 }
 
 struct SetupProfileContainerView: UIViewControllerRepresentable {
-    let viewController = SetupProfileViewController()
+    let viewController = SetupProfileViewController(currentUser: Auth.auth().currentUser!)
     
     func makeUIViewController(context: Context) -> some UIViewController {
         return viewController

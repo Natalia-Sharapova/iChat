@@ -41,7 +41,7 @@ class UserCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     func configure<U>(with value: U) where U : Hashable {
         guard let user: MUser = value as? MUser else { return }
         
-        userImageView.image = UIImage(named: user.userImageString)
+        userImageView.image = UIImage(named: user.avatarStringURL)
         userNameLabel.text = user.userName
         
     }

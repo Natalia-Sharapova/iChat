@@ -6,22 +6,26 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class PeopleViewController: UIViewController {
     
     var collectionView: UICollectionView!
+    var dataSource: UICollectionViewDiffableDataSource<Section, MUser>?
+    let users = [MUser]()
     
-    let users = Bundle.main.decode(_type: [MUser].self, from: "users2.json")
+   // let users = Bundle.main.decode(_type: [MUser].self, from: "users2.json")
    
     enum Section: Int, CaseIterable {
         case users
         func description(usersCount: Int) -> String {
-            return "\(usersCount) people nearby"
+            switch self {
+            case .users:
+                return "\(usersCount) people nearby"
+            }
         }
     }
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, MUser>?
-                
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,9 +33,26 @@ class PeopleViewController: UIViewController {
         setupCollectionView()
         setupSearchBar()
         createDataSource()
-        reloadData(with: nil)
+       reloadData(with: nil)
         
-        print(users)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(signOut))
+    }
+    
+    @objc func signOut() {
+        let alertController = UIAlertController(title: nil, message: "Are u sure u want to sign out?", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let signOutAction = UIAlertAction(title: "Sign out", style: .destructive) { _ in
+            do {
+                try Auth.auth().signOut()
+                UIApplication.shared.keyWindow?.rootViewController = AuthViewController()
+            } catch {
+                print("Error signing out:", error.localizedDescription)
+            }
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(signOutAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
     
     private func setupCollectionView() {
@@ -55,7 +76,7 @@ class PeopleViewController: UIViewController {
         searchController.searchBar.delegate = self
     }
   
-    private func reloadData(with searchText: String?)  {
+private func reloadData(with searchText: String?)  {
         
         let filtered = users.filter { (user) -> Bool in
             user.contains(filter: searchText)
@@ -72,7 +93,7 @@ class PeopleViewController: UIViewController {
 
 extension PeopleViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        reloadData(with: searchText)
+    reloadData(with: searchText)
     }
 }
 

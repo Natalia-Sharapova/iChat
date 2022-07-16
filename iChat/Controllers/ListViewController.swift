@@ -11,8 +11,8 @@ class ListViewController: UIViewController {
 
     var collectionView: UICollectionView!
     
-    let activeChats = Bundle.main.decode(_type: [MChat].self, from: "activeChats.json")
-    let waitingChats = Bundle.main.decode(_type: [MChat].self, from: "waitingChats.json")
+    //let activeChats = Bundle.main.decode(_type: [MChat].self, from: "activeChats.json")
+ //   let waitingChats = Bundle.main.decode(_type: [MChat].self, from: "waitingChats.json")
     
     enum Section: Int, CaseIterable {
         case waitingChats
@@ -43,8 +43,8 @@ class ListViewController: UIViewController {
         
         var snapShot = NSDiffableDataSourceSnapshot<Section, MChat>()
         snapShot.appendSections([.waitingChats,.activeChats])
-        snapShot.appendItems(waitingChats, toSection: .waitingChats)
-        snapShot.appendItems(activeChats, toSection: .activeChats)
+     //   snapShot.appendItems(waitingChats, toSection: .waitingChats)
+    //    snapShot.appendItems(activeChats, toSection: .activeChats)
         dataSource?.apply(snapShot, animatingDifferences: true)
         }
 
