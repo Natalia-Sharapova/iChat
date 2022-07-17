@@ -42,6 +42,7 @@ class LoginViewController: UIViewController {
         
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+        googleButton.addTarget(self, action: #selector(googleButtonTapped), for: .touchUpInside)
     }
     
     @objc func loginButtonTapped() {
@@ -73,6 +74,32 @@ class LoginViewController: UIViewController {
             self.delegate?.toSignUpVC()
         }
     }
+    
+    @objc private func googleButtonTapped() {
+        
+        AuthService.shared.googleLogin(viewController: self) { result in
+            
+            switch result {
+            case .success(let user):
+                FirestoreService.shared.getUserData(user: user) { result in
+                    switch result {
+                    case .success(let muser):
+                        self.showAlert(with: "Successfully!", and: "You are logged in") {
+                            let mainTabBar = MainTabBarController(currentUser: muser)
+                            mainTabBar.modalPresentationStyle = .fullScreen
+                            self.present(mainTabBar, animated: true, completion: nil)
+                        }
+                    case .failure(_):
+                        self.showAlert(with: "Successfully!", and: "You are registered") {
+                            self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
+                        }
+                    }
+                }
+            case .failure(let error):
+                self.showAlert(with: "Oops, something went wrong", and: error.localizedDescription)
+            }
+        }
+}
     }
 
 extension LoginViewController {

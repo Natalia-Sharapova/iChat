@@ -34,6 +34,11 @@ class SetupProfileViewController: UIViewController {
       
         self.currentUser = currentUser
         super.init(nibName: nil, bundle: nil)
+        
+        if let userName = currentUser.displayName {
+            fullNameTextField.text = userName
+            
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -123,7 +128,7 @@ extension SetupProfileViewController {
         view.addSubview(welcomeLabel)
         view.addSubview(stackView)
         
-        welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 160).isActive = true
+        welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
         welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         fullImageView.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 40).isActive = true
@@ -145,6 +150,7 @@ struct SetupProfileViewControllerProvider: PreviewProvider {
 }
 
 struct SetupProfileContainerView: UIViewControllerRepresentable {
+    
     let viewController = SetupProfileViewController(currentUser: Auth.auth().currentUser!)
     
     func makeUIViewController(context: Context) -> some UIViewController {

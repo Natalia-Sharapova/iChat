@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import GoogleSignIn
+import Firebase
 
 class AuthViewController: UIViewController {
     
@@ -32,6 +34,7 @@ class AuthViewController: UIViewController {
         
         emailButton.addTarget(self, action: #selector(emailButtonTapped), for: .touchUpInside)
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        googleButton.addTarget(self, action: #selector(googleButtonTapped), for: .touchUpInside)
         
         googleButton.customizeGoogleButton()
     }
@@ -43,8 +46,34 @@ class AuthViewController: UIViewController {
     @objc func loginButtonTapped() {
         present(loginVC, animated: true, completion: nil)
     }
+    
+    @objc private func googleButtonTapped() {
+        
+        AuthService.shared.googleLogin(viewController: self) { result in
+            
+            switch result {
+            case .success(let user):
+                FirestoreService.shared.getUserData(user: user) { result in
+                    switch result {
+                    case .success(let muser):
+                        
+                        UIApplication.getTopViewController()?.showAlert(with: "Successfully!", and: "You are logged in!") {
+                            let mainTabBar = MainTabBarController(currentUser: muser)
+                            mainTabBar.modalPresentationStyle = .fullScreen
+                            UIApplication.getTopViewController()!.present(mainTabBar, animated: true, completion: nil)
+                        }
+                    case .failure(_):
+                        UIApplication.getTopViewController()?.showAlert(with: "Successfully!", and: "You are registered!") {
+                            UIApplication.getTopViewController()?.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
+                        }
+                    }
+                }
+            case .failure(let error):
+                UIApplication.getTopViewController()?.showAlert(with: "Oops, something went wrong", and: error.localizedDescription)
+            }
+        }
 }
-
+}
 extension AuthViewController {
     
     private func  setupConstrains() {
