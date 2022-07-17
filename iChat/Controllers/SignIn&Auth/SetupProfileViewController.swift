@@ -51,6 +51,7 @@ class SetupProfileViewController: UIViewController {
         setupConstrains()
         
         goToChatsButton.addTarget(self, action: #selector(goToChatsButtonTapped), for: .touchUpInside)
+        fullImageView.plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
     }
     
     @objc func goToChatsButtonTapped() {
@@ -58,7 +59,7 @@ class SetupProfileViewController: UIViewController {
                                                 email: currentUser.email!,
                                                 userName: fullNameTextField.text,
                                                 sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex),
-                                                avatarImageString: "nil",
+                                                avatarImageString: fullImageView.circleImageView.image,
                                                 description: aboutMeTextField.text) { result in
             switch result {
             
@@ -67,20 +68,39 @@ class SetupProfileViewController: UIViewController {
                     let mainTabBarVC = MainTabBarController(currentUser: muser)
                     mainTabBarVC.modalPresentationStyle = .fullScreen
                     self.present(mainTabBarVC, animated: true, completion: nil)
+                    print(#function, "success")
                 }
-                
                 print(#function, muser)
             case .failure(let error):
                 self.showAlert(with: "Opps", and: error.localizedDescription)
+                print(#function, String(describing: error))
             }
         }
+    }
+    
+    @objc func plusButtonTapped() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.sourceType = .photoLibrary
+        imagePickerController.delegate = self
+        present(imagePickerController, animated: true, completion: nil)
+    }
+}
+
+extension SetupProfileViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        picker.dismiss(animated: true, completion: nil)
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
+            return
+        }
+        
+        fullImageView.circleImageView.image = image
     }
 }
 
 // MARK: - Setup constrains
 
 extension SetupProfileViewController {
-    
     private func setupConstrains() {
         
         // MARK: - Full imageView

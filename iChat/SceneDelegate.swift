@@ -17,10 +17,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        self.window?.rootViewController = MainTabBarController()
-        window?.makeKeyAndVisible()
+     //   self.window?.rootViewController = MainTabBarController()
+    //  window?.makeKeyAndVisible()
         
-     /*  if let user = Auth.auth().currentUser {
+   if let user = Auth.auth().currentUser {
             FirestoreService.shared.getUserData(user: user) { result in
                 
                 switch result {
@@ -37,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             print("1234")
             window?.rootViewController = AuthViewController()
         }
-        window?.makeKeyAndVisible()*/
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -13,7 +13,10 @@ class PhotoView: UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = #imageLiteral(resourceName: "avatar")
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 45
+        imageView.backgroundColor = .yellow
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -34,6 +37,7 @@ class PhotoView: UIView {
         addSubview(plusButton)
         
         setupConstrains()
+      
     }
     
     private func setupConstrains() {

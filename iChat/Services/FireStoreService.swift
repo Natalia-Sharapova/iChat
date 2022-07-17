@@ -16,6 +16,8 @@ class FirestoreService {
         return dataBase.collection("users")
     }
     
+    var currentUser: MUser!
+    
     func getUserData(user: User, completion: @escaping (Result<MUser, Error>) -> Void) {
         
         let docref = usersRef.document(user.uid)
@@ -26,6 +28,7 @@ class FirestoreService {
                     print(#line, #function, "canNotUnwrapToMUser ")
                     return 
                 }
+                self.currentUser = muser
                 completion(.success(muser))
             } else {
                 completion(.failure(UserError.canNotGetUsersInfo))
@@ -34,26 +37,41 @@ class FirestoreService {
         }
     }
     
-    func saveProfileWith(id: String, email: String, userName: String?, sex: String?, avatarImageString: String?, description: String?, completion: @escaping (Result<MUser, Error>) -> Void) {
+    func saveProfileWith(id: String, email: String, userName: String?, sex: String?, avatarImageString: UIImage?, description: String?, completion: @escaping (Result<MUser, Error>) -> Void) {
         
         guard Validators.isFull(userName: userName, description: description, sex: sex) else {
             completion(.failure(UserError.notFull))
             return 
         }
-    
-    let muser = MUser(userName: userName!,
-                      email: email,
-                      avatarStringURL: "not exist",
-                      description: description!,
-                      sex: sex!,
-                      id: id)
         
-        self.usersRef.document(muser.id).setData(muser.representation) { error in
-            if let error = error {
+        guard avatarImageString != #imageLiteral(resourceName: "avatar") else {
+            completion(.failure(UserError.photoNotExist))
+            return
+        }
+        
+        var muser = MUser(userName: userName!,
+                          email: email,
+                          avatarStringURL: "not exist",
+                          description: description!,
+                          sex: sex!,
+                          id: id)
+        
+        StorageService.shared.upload(photo: avatarImageString!) { result in
+            switch result {
+            
+            case .success(let url):
+                muser.avatarStringURL = url.absoluteString
+                
+                self.usersRef.document(muser.id).setData(muser.representation) { error in
+                    if let error = error {
+                        completion(.failure(error))
+                    } else {
+                        completion(.success(muser))
+                    }
+                }
+            case .failure(let error):
                 completion(.failure(error))
-            } else {
-                completion(.success(muser))
             }
         }
-}
+    }
 }
