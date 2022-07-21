@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ProfileViewController: UIViewController {
     
@@ -14,7 +15,23 @@ class ProfileViewController: UIViewController {
     let nameLabel = UILabel(text: "Monica Bell", textColor: .black, font: .systemFont(ofSize: 20, weight: .light))
     let aboutLabel = UILabel(text: "Write to me", textColor: .black, font: .systemFont(ofSize: 16, weight: .light))
     let textField = CustomTextField()
-
+    
+    private var user: MUser
+    
+        init(user: MUser) {
+            self.user = user
+            super.init(nibName: nil, bundle: nil)
+            self.nameLabel.text = user.userName
+            self.aboutLabel.text = user.description
+            
+            guard let url = URL(string: user.avatarStringURL) else { return }
+            self.imageView.kf.setImage(with: url)
+        }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,6 +57,20 @@ class ProfileViewController: UIViewController {
     
         @objc func sendMessage() {
             print(#function)
+            
+            guard let message = textField.text, message != "" else { return }
+            
+            self.dismiss(animated: true) {
+                FirestoreService.shared.createWaitingChat(message: message, receiver: self.user) { result in
+                    switch result {
+                    
+                    case .success():
+                        UIApplication.getTopViewController()?.showAlert(with: "Success!", and: "Your message to \(self.user.userName) was sent")
+                    case .failure(let error):
+                        UIApplication.getTopViewController()?.showAlert(with: "Error", and: error.localizedDescription)
+                    }
+                }
+            }
         }
     }
 
@@ -76,27 +107,6 @@ extension ProfileViewController {
             textField.trailingAnchor.constraint(equalTo: contaiterView.trailingAnchor, constant: -24),
             textField.topAnchor.constraint(equalTo: aboutLabel.bottomAnchor, constant: 12),
             textField.heightAnchor.constraint(equalToConstant: 48)
-            
-            
         ])
-        
-    }
-}
-
-import SwiftUI
-
-struct ProfileViewControllerProvider: PreviewProvider {
-    static var previews: some View {
-        ProfileContainerView().edgesIgnoringSafeArea(.all)
-    }
-}
-
-struct ProfileContainerView: UIViewControllerRepresentable {
-    let tabBarVc = ProfileViewController()
-    
-    func makeUIViewController(context: Context) -> some UIViewController {
-        return tabBarVc
-    }
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
     }
 }

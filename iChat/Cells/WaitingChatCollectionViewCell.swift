@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class WaitingChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     
@@ -27,8 +28,11 @@ class WaitingChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     }
    
     func configure<U>(with value: U) where U : Hashable {
+        
         guard let waitingChat: MChat = value as? MChat else { return }
-        friendImageView.image = UIImage(systemName: waitingChat.avatarStringURL)
+        guard let url = URL(string: waitingChat.friendAvatarStringURL) else { return }
+        
+        friendImageView.kf.setImage(with: url)
     }
     
   

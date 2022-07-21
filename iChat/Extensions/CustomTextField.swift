@@ -66,23 +66,3 @@ class CustomTextField: UITextField {
     }
     
 }
-
-import SwiftUI
-
-struct TextFieldCellProvider: PreviewProvider {
-    static var previews: some View {
-        TextFieldContainerView().edgesIgnoringSafeArea(.all)
-    }
-}
-
-struct TextFieldContainerView: UIViewControllerRepresentable {
-    
-    let tabBarVc = ProfileViewController()
-    
-    func makeUIViewController(context: Context) -> some UIViewController {
-        return tabBarVc
-    }
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-    }
-}
-

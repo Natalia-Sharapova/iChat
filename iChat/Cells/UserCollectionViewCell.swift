@@ -6,11 +6,12 @@
 //
 
 import UIKit
+import Kingfisher
 
 class UserCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     
     let userImageView = UIImageView()
-    let userNameLabel = UILabel(text: "text", textColor: .black, font: .laoSangamMN20()!)
+    let userNameLabel = UILabel(text: "text", textColor: .black, font: .laoSangamMN18()!)
     let containerView = UIView()
     
     static var reuseId = "UserCollectionViewCell"
@@ -37,11 +38,16 @@ class UserCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
         self.containerView.layer.cornerRadius = 5
         self.containerView.clipsToBounds = true
     }
-   
+    
+    override func prepareForReuse() {
+        userImageView.image = nil
+    }
+  
     func configure<U>(with value: U) where U : Hashable {
         guard let user: MUser = value as? MUser else { return }
         
-        userImageView.image = UIImage(named: user.avatarStringURL)
+        guard let url = URL(string: user.avatarStringURL) else { return }
+        userImageView.kf.setImage(with: url)
         userNameLabel.text = user.userName
         
     }

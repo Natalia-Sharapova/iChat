@@ -7,12 +7,15 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 class PeopleViewController: UIViewController {
     
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, MUser>?
-    let users = [MUser]()
+    var users = [MUser]()
+    
+    private var usersListener: ListenerRegistration?
     
     private let currentUser: MUser
     
@@ -26,8 +29,10 @@ class PeopleViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-   // let users = Bundle.main.decode(_type: [MUser].self, from: "users2.json")
-   
+    deinit {
+        usersListener?.remove()
+    }
+    
     enum Section: Int, CaseIterable {
         case users
         func description(usersCount: Int) -> String {
@@ -45,9 +50,19 @@ class PeopleViewController: UIViewController {
         setupCollectionView()
         setupSearchBar()
         createDataSource()
-       reloadData(with: nil)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(signOut))
+        
+       usersListener = ListenerService.shared.usersObserver(users: users) { result in
+            switch result {
+            
+            case .success(let users):
+                self.users = users
+                self.reloadData(with: nil)
+            case .failure(let error):
+                self.showAlert(with: "Error", and: error.localizedDescription)
+            }
+        }
     }
     
     @objc func signOut() {
@@ -75,6 +90,8 @@ class PeopleViewController: UIViewController {
         
         collectionView.register(UserCollectionViewCell.self, forCellWithReuseIdentifier: UserCollectionViewCell.reuseId)
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
+        
+        collectionView.delegate = self
     }
     
     private func setupSearchBar() {
@@ -106,6 +123,16 @@ private func reloadData(with searchText: String?)  {
 extension PeopleViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     reloadData(with: searchText)
+    }
+}
+
+// MARK: - UICollectionViewDelegate
+extension PeopleViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let user = self.dataSource?.itemIdentifier(for: indexPath) else { return }
+        let profileViewController = ProfileViewController(user: user)
+        
+        present(profileViewController, animated: true, completion: nil)
     }
 }
 
@@ -169,7 +196,6 @@ extension PeopleViewController {
     }
     
     extension PeopleViewController {
-        
         private func createDataSource() {
             
                 dataSource = UICollectionViewDiffableDataSource<Section, MUser>(

@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Kingfisher
 
 class SetupProfileViewController: UIViewController {
 
@@ -37,7 +38,9 @@ class SetupProfileViewController: UIViewController {
         
         if let userName = currentUser.displayName {
             fullNameTextField.text = userName
-            
+        }
+        if let photoUrl = currentUser.photoURL {
+            fullImageView.circleImageView.kf.setImage(with: photoUrl)
         }
     }
     
@@ -57,10 +60,10 @@ class SetupProfileViewController: UIViewController {
     @objc func goToChatsButtonTapped() {
         FirestoreService.shared.saveProfileWith(id: currentUser.uid,
                                                 email: currentUser.email!,
-                                                userName: fullNameTextField.text,
-                                                sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex),
-                                                avatarImageString: fullImageView.circleImageView.image,
-                                                description: aboutMeTextField.text) { result in
+                                                username: fullNameTextField.text,
+                                                avatarImage: fullImageView.circleImageView.image,
+                                                description: aboutMeTextField.text,
+                                                sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex)) { result in
             switch result {
             
             case .success(let muser):
@@ -75,8 +78,8 @@ class SetupProfileViewController: UIViewController {
                 self.showAlert(with: "Opps", and: error.localizedDescription)
                 print(#function, String(describing: error))
             }
-        }
     }
+        }
     
     @objc func plusButtonTapped() {
         let imagePickerController = UIImagePickerController()

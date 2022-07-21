@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ActiveChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     
@@ -30,15 +31,16 @@ class ActiveChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     }
   
     func configure<U>(with value: U) where U : Hashable {
+        
         guard let activeChat: MChat = value as? MChat else { return }
         
-        friendImageView.image = UIImage(named: activeChat.avatarStringURL)
-        friendNameLabel.text = activeChat.userName
-        lastMessageLabel.text = activeChat.lastMessage
+        friendNameLabel.text = "Nata"
+            //activeChat.friendUserName
+        lastMessageLabel.text = "Hi"
+            //activeChat.lastMessage
+        guard let url = URL(string: activeChat.friendAvatarStringURL) else { return }
+        friendImageView.kf.setImage(with: url)
     }
-    
-   
-   
 }
 
 extension ActiveChatCollectionViewCell {
