@@ -9,6 +9,22 @@ import UIKit
 import FirebaseFirestore
 import MessageKit
 
+struct ImageItem: MediaItem {
+    
+    /// The url where the media is located.
+    var url: URL?
+
+    /// The image.
+    var image: UIImage?
+
+    /// A placeholder image for when the image is obtained asychronously.
+    var placeholderImage: UIImage
+
+    /// The size of the media item.
+    var size: CGSize
+    
+}
+
 struct MMessage: Hashable, MessageType {
    
     var sender: SenderType
@@ -23,9 +39,11 @@ struct MMessage: Hashable, MessageType {
     }
     
     var kind: MessageKind {
-       // return .text(content)
+    
         if let image = image {
-            return .photo(<#T##MediaItem#>)
+            let mediaItem = ImageItem(url: nil, image: nil, placeholderImage: image, size: image.size)
+            
+            return .photo(mediaItem)
         } else {
             return .text(content)
         }
