@@ -177,7 +177,7 @@ private func sendImage(image: UIImage) {
                 case .success():
                     self.messagesCollectionView.scrollToLastItem()
                     
-                case .failure(let error):
+                case .failure(_):
                     self.showAlert(with: "Error", and: "The image not delivered")
                 }
             }
