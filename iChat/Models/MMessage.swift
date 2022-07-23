@@ -39,8 +39,8 @@ struct MMessage: Hashable, MessageType {
         
         if let image = image {
             let mediaItem = ImageItem(url: nil, image: nil, placeholderImage: image, size: image.size)
-            
             return .photo(mediaItem)
+            
         } else {
             return .text(content)
         }
@@ -110,6 +110,7 @@ struct MMessage: Hashable, MessageType {
     }
 }
 
+// MARK: - Comparable
 extension MMessage: Comparable {
     static func <(lhs: MMessage, rhs: MMessage) -> Bool {
         return lhs.sentDate < rhs.sentDate
