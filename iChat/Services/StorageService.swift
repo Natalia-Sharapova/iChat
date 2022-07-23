@@ -11,7 +11,10 @@ import FirebaseStorage
 
 class StorageService {
     
+    // MARK: - Properties
+    //singletone
     static let shared = StorageService()
+    
     let storageRef = Storage.storage().reference()
     
     private var currentUserId: String {
@@ -23,35 +26,40 @@ class StorageService {
     }
     
     private var chatsRef: StorageReference {
-           return storageRef.child("chats")
-       }
+        return storageRef.child("chats")
+    }
+    
+    // load image to the Firebase
+    func upload(photo: UIImage, completion: @escaping(Result<URL, Error>) -> Void) {
         
-        func upload(photo: UIImage, completion: @escaping(Result<URL, Error>) -> Void) {
-            
-            guard let scaledImage = photo.scaledToSafeUploadSize, let imageData = scaledImage.jpegData(compressionQuality: 0.4) else {
+        // check right size for image
+        guard let scaledImage = photo.scaledToSafeUploadSize,
+              let imageData = scaledImage.jpegData(compressionQuality: 0.4) else {
+            return
+        }
+        
+        let metaData = StorageMetadata()
+        metaData.contentType = "image/jpeg"
+        
+        avatarsRef.child(currentUserId).putData(imageData, metadata: metaData) { metaData, error in
+            guard let _ = metaData else {
+                completion(.failure(error!))
                 return
             }
-            
-            let metaData = StorageMetadata()
-            metaData.contentType = "image/jpeg"
-            
-            avatarsRef.child(currentUserId).putData(imageData, metadata: metaData) { metaData, error in
-                guard let _ = metaData else {
+            self.avatarsRef.child(self.currentUserId).downloadURL { url, error in
+                guard let downloadUrl = url else {
                     completion(.failure(error!))
                     return
                 }
-                self.avatarsRef.child(self.currentUserId).downloadURL { url, error in
-                    guard let downloadUrl = url else {
-                        completion(.failure(error!))
-                        return
-                    }
-                    completion(.success(downloadUrl))
-                }
+                completion(.success(downloadUrl))
             }
         }
+    }
     
     func uploadImageMessage(photo: UIImage, to chat: MChat, completion: @escaping(Result<URL, Error>) -> Void) {
-        guard let scaledImage = photo.scaledToSafeUploadSize, let imageData = scaledImage.jpegData(compressionQuality: 0.4) else {
+        
+        guard let scaledImage = photo.scaledToSafeUploadSize,
+              let imageData = scaledImage.jpegData(compressionQuality: 0.4) else {
             return
         }
         
@@ -79,6 +87,7 @@ class StorageService {
         }
     }
     
+    // download picture sent by a friend (inside the chat)
     func downloadImage(url: URL?, completion: @escaping(Result<UIImage?, Error>) -> Void) {
         
         let reference = Storage.storage().reference(forURL: url!.absoluteString)
@@ -93,5 +102,5 @@ class StorageService {
             completion(.success(UIImage(data: imageData)))
         }
     }
-    }
+}
 

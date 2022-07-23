@@ -10,6 +10,8 @@ import Kingfisher
 
 class ActiveChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     
+    //MARK: - Properties
+    //singleton
     static var reuseId = "ActiveChatCollectionViewCell"
     
     let friendImageView = UIImageView()
@@ -29,20 +31,21 @@ class ActiveChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-  
+    
+    //MARK: - Method
+    
     func configure<U>(with value: U) where U : Hashable {
         
         guard let activeChat: MChat = value as? MChat else { return }
         
         friendNameLabel.text = "Nata"
-            //activeChat.friendUserName
         lastMessageLabel.text = "Hi"
-            //activeChat.lastMessage
         guard let url = URL(string: activeChat.friendAvatarStringURL) else { return }
         friendImageView.kf.setImage(with: url)
     }
 }
 
+//MARK: - Extension
 extension ActiveChatCollectionViewCell {
     
     private func setupConstrains() {
@@ -80,6 +83,8 @@ extension ActiveChatCollectionViewCell {
         ])
     }
 }
+
+// MARK: - For Canvas mode
 
 import SwiftUI
 

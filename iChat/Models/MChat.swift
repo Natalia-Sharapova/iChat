@@ -9,6 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 struct MChat: Hashable, Decodable {
+    
     var friendUserName: String
     var friendAvatarStringURL: String
     var lastMessage: String

@@ -61,8 +61,6 @@ struct MUser: Hashable, Decodable {
         self.id = id
     }
     
-    
-    
     var representation: [String: Any] {
         var rep = ["userName": userName]
         rep["email"] = email

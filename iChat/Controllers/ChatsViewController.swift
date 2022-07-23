@@ -12,11 +12,11 @@ import FirebaseFirestore
 
 class ChatsViewController: MessagesViewController {
     
+    // MARK: - Properties
     private let user: MUser
     private let chat: MChat
     
     private var messages = [MMessage]()
-    
     private var messageListener: ListenerRegistration?
     
     init(user: MUser, chat: MChat) {
@@ -35,6 +35,7 @@ class ChatsViewController: MessagesViewController {
         messageListener?.remove()
     }
     
+    // MARK: - ViewController methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -53,10 +54,10 @@ class ChatsViewController: MessagesViewController {
             layout.photoMessageSizeCalculator.outgoingAvatarSize = .zero
         }
         
+        // Observe messages
         messageListener = ListenerService.shared.messageObserver(chat: chat, completion: { result in
             
             switch result {
-            
             case .success(var message):
                 if let url = message.downloadURL {
                     StorageService.shared.downloadImage(url: url) { [weak self] result in
@@ -71,78 +72,27 @@ class ChatsViewController: MessagesViewController {
                             self.showAlert(with: "Error", and: error.localizedDescription)
                         }
                     }
-                    
                 } else {
                     self.insertNewMessage(message: message)
                 }
-                
             case .failure(let error):
                 self.showAlert(with: "Error", and: error.localizedDescription)
             }
         })
     }
+    // MARK: - Methods
+    
+    @objc func cameraButtonPressed() {
+        let picker = UIImagePickerController()
+        picker.delegate = self
         
-        @objc func cameraButtonPressed() {
-            
-            let picker = UIImagePickerController()
-            picker.delegate = self
-            
-            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                picker.sourceType = .camera
-            } else {
-                picker.sourceType = .photoLibrary
-            }
-            present(picker, animated: true, completion: nil)
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            picker.sourceType = .camera
+        } else {
+            picker.sourceType = .photoLibrary
         }
-    
-    func configureMessageInputBar() {
-            messageInputBar.isTranslucent = true
-            messageInputBar.separatorLine.isHidden = true
-            messageInputBar.backgroundView.backgroundColor = UIColor(red: 247, green: 248, blue: 253, alpha: 1)
-            messageInputBar.inputTextView.backgroundColor = .white
-            messageInputBar.inputTextView.placeholderTextColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-            messageInputBar.inputTextView.textContainerInset = UIEdgeInsets(top: 14, left: 30, bottom: 14, right: 36)
-            messageInputBar.inputTextView.placeholderLabelInsets = UIEdgeInsets(top: 14, left: 36, bottom: 14, right: 36)
-            messageInputBar.inputTextView.layer.borderColor = #colorLiteral(red: 0.3987493813, green: 0.3987493813, blue: 0.3987493813, alpha: 1)
-            messageInputBar.inputTextView.layer.borderWidth = 0.2
-            messageInputBar.inputTextView.layer.cornerRadius = 18.0
-            messageInputBar.inputTextView.layer.masksToBounds = true
-            messageInputBar.inputTextView.scrollIndicatorInsets = UIEdgeInsets(top: 14, left: 0, bottom: 14, right: 0)
-            
-            messageInputBar.layer.shadowColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            messageInputBar.layer.shadowRadius = 5
-            messageInputBar.layer.shadowOpacity = 0.3
-            messageInputBar.layer.shadowOffset = CGSize(width: 0, height: 4)
-        
-        configureSendButton()
-        configureCameraIcon()
-        }
-    
-    func configureSendButton() {
-           messageInputBar.sendButton.setImage(UIImage(named: "sent"), for: .normal)
-           messageInputBar.sendButton.applyGradient(cornerRadius: 10)
-           messageInputBar.setRightStackViewWidthConstant(to: 56, animated: false)
-           messageInputBar.sendButton.contentEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 6, right: 30)
-           messageInputBar.sendButton.setSize(CGSize(width: 48, height: 48), animated: false)
-           messageInputBar.middleContentViewPadding.right = -38
-       }
-    
-    func configureCameraIcon() {
-        
-           let cameraItem = InputBarButtonItem(type: .system)
-        cameraItem.tintColor = .purple
-        
-           let cameraImage = UIImage(systemName: "camera")
-           cameraItem.image = cameraImage
-           
-           cameraItem.addTarget(self, action: #selector(cameraButtonPressed), for: .primaryActionTriggered)
-           cameraItem.setSize(CGSize(width: 60, height: 30), animated: false)
-           
-           messageInputBar.leftStackView.alignment = .center
-           messageInputBar.setLeftStackViewWidthConstant(to: 50, animated: false)
-           
-           messageInputBar.setStackViewItems([cameraItem], forStack: .left, animated: false)
-       }
+        present(picker, animated: true, completion: nil)
+    }
     
     func insertNewMessage(message: MMessage) {
         guard !messages.contains(message) else { return }
@@ -152,7 +102,7 @@ class ChatsViewController: MessagesViewController {
         
         let isLatestMessage = messages.firstIndex(of: message) == (messages.count - 1)
         let shouldScrollToBottom = messagesCollectionView.isAtBottom && isLatestMessage
-            
+        
         messagesCollectionView.reloadData()
         
         if shouldScrollToBottom {
@@ -161,33 +111,88 @@ class ChatsViewController: MessagesViewController {
             }
         }
     }
-
-private func sendImage(image: UIImage) {
     
-    StorageService.shared.uploadImageMessage(photo: image, to: chat) { result in
-        switch result {
+    private func sendImage(image: UIImage) {
         
-        case .success(let url):
-            var message = MMessage(user: self.user, image: image)
-            message.downloadURL = url
+        StorageService.shared.uploadImageMessage(photo: image, to: chat) { result in
+            switch result {
             
-            FirestoreService.shared.sendMessage(chat: self.chat, message: message) { result in
-                switch result {
+            case .success(let url):
+                var message = MMessage(user: self.user, image: image)
+                message.downloadURL = url
                 
-                case .success():
-                    self.messagesCollectionView.scrollToLastItem()
+                FirestoreService.shared.sendMessage(chat: self.chat, message: message) { result in
+                    switch result {
                     
-                case .failure(_):
-                    self.showAlert(with: "Error", and: "The image not delivered")
+                    case .success():
+                        self.messagesCollectionView.scrollToLastItem()
+                        
+                    case .failure(_):
+                        self.showAlert(with: "Error", and: "The image not delivered")
+                    }
                 }
+            case .failure(let error):
+                self.showAlert(with: "Error", and: error.localizedDescription)
             }
-        case .failure(let error):
-            self.showAlert(with: "Error", and: error.localizedDescription)
         }
     }
 }
+
+// MARK: - Extensions
+extension ChatsViewController {
+    
+    func configureMessageInputBar() {
+        
+        messageInputBar.isTranslucent = true
+        messageInputBar.separatorLine.isHidden = true
+        messageInputBar.backgroundView.backgroundColor = UIColor.milkWhite()
+        messageInputBar.inputTextView.backgroundColor = .white
+        messageInputBar.inputTextView.placeholderTextColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        messageInputBar.inputTextView.textContainerInset = UIEdgeInsets(top: 14, left: 30, bottom: 14, right: 36)
+        messageInputBar.inputTextView.placeholderLabelInsets = UIEdgeInsets(top: 14, left: 36, bottom: 14, right: 36)
+        messageInputBar.inputTextView.layer.borderColor = #colorLiteral(red: 0.3987493813, green: 0.3987493813, blue: 0.3987493813, alpha: 1)
+        messageInputBar.inputTextView.layer.borderWidth = 0.2
+        messageInputBar.inputTextView.layer.cornerRadius = 18.0
+        messageInputBar.inputTextView.layer.masksToBounds = true
+        messageInputBar.inputTextView.scrollIndicatorInsets = UIEdgeInsets(top: 14, left: 0, bottom: 14, right: 0)
+        
+        messageInputBar.layer.shadowColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        messageInputBar.layer.shadowRadius = 5
+        messageInputBar.layer.shadowOpacity = 0.3
+        messageInputBar.layer.shadowOffset = CGSize(width: 0, height: 4)
+        
+        configureSendButton()
+        configureCameraIcon()
+    }
+    
+    func configureSendButton() {
+        messageInputBar.sendButton.setImage(UIImage(named: "sent"), for: .normal)
+        messageInputBar.sendButton.applyGradient(cornerRadius: 10)
+        messageInputBar.setRightStackViewWidthConstant(to: 56, animated: false)
+        messageInputBar.sendButton.contentEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 6, right: 30)
+        messageInputBar.sendButton.setSize(CGSize(width: 48, height: 48), animated: false)
+        messageInputBar.middleContentViewPadding.right = -38
+    }
+    
+    func configureCameraIcon() {
+        
+        let cameraItem = InputBarButtonItem(type: .system)
+        cameraItem.tintColor = .purple
+        
+        let cameraImage = UIImage(systemName: "camera")
+        cameraItem.image = cameraImage
+        
+        cameraItem.addTarget(self, action: #selector(cameraButtonPressed), for: .primaryActionTriggered)
+        cameraItem.setSize(CGSize(width: 60, height: 30), animated: false)
+        
+        messageInputBar.leftStackView.alignment = .center
+        messageInputBar.setLeftStackViewWidthConstant(to: 50, animated: false)
+        
+        messageInputBar.setStackViewItems([cameraItem], forStack: .left, animated: false)
+    }
 }
 
+// MARK: - UINavigationControllerDelegate, UIImagePickerControllerDelegate
 extension ChatsViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -195,12 +200,12 @@ extension ChatsViewController: UINavigationControllerDelegate, UIImagePickerCont
         
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
             return
-    }
+        }
         sendImage(image: image)
+    }
 }
-}
-    
 
+// MARK: - MessagesDataSource
 extension ChatsViewController: MessagesDataSource {
     
     func currentSender() -> SenderType {
@@ -220,7 +225,7 @@ extension ChatsViewController: MessagesDataSource {
     }
 }
 
-
+//MARK: - MessagesLayoutDelegate
 extension ChatsViewController: MessagesLayoutDelegate {
     func footerViewSize(for section: Int, in messagesCollectionView: MessagesCollectionView) -> CGSize {
         return CGSize(width: 0, height: 8)
@@ -235,6 +240,7 @@ extension ChatsViewController: MessagesLayoutDelegate {
     }
 }
 
+// MARK: - MessagesDisplayDelegate
 extension ChatsViewController: MessagesDisplayDelegate {
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
@@ -267,6 +273,7 @@ extension ChatsViewController: MessagesDisplayDelegate {
     }
 }
 
+// MARK: - InputBarAccessoryViewDelegate
 extension ChatsViewController: InputBarAccessoryViewDelegate {
     
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
@@ -283,9 +290,5 @@ extension ChatsViewController: InputBarAccessoryViewDelegate {
                 self.showAlert(with: "Error", and: error.localizedDescription)
             }
         }
-        
-      
-        
-        
     }
 }

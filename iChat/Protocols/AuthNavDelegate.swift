@@ -8,6 +8,7 @@
 import Foundation
 
 protocol AuthNavDelegate: AnyObject {
-   func toLoginVC()
-   func toSignUpVC()
+    
+    func toLoginVC()
+    func toSignUpVC()
 }

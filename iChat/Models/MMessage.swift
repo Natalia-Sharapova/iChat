@@ -13,31 +13,30 @@ struct ImageItem: MediaItem {
     
     /// The url where the media is located.
     var url: URL?
-
+    
     /// The image.
     var image: UIImage?
-
+    
     /// A placeholder image for when the image is obtained asychronously.
     var placeholderImage: UIImage
-
+    
     /// The size of the media item.
     var size: CGSize
-    
 }
 
 struct MMessage: Hashable, MessageType {
-   
+    
     var sender: SenderType
     let content: String
     let sentDate: Date
     let id: String?
-
+    
     var messageId: String {
         return id ?? UUID().uuidString
     }
     
     var kind: MessageKind {
-    
+        
         if let image = image {
             let mediaItem = ImageItem(url: nil, image: nil, placeholderImage: image, size: image.size)
             
@@ -66,24 +65,24 @@ struct MMessage: Hashable, MessageType {
     }
     
     init?(document: QueryDocumentSnapshot) {
-           let data = document.data()
-           guard let sentDate = data["created"] as? Timestamp else { return nil }
-           guard let senderId = data["senderID"] as? String else { return nil }
-           guard let senderName = data["senderName"] as? String else { return nil }
+        let data = document.data()
+        guard let sentDate = data["created"] as? Timestamp else { return nil }
+        guard let senderId = data["senderID"] as? String else { return nil }
+        guard let senderName = data["senderName"] as? String else { return nil }
         
         self.id = document.documentID
         self.sentDate = sentDate.dateValue()
         sender = Sender(senderId: senderId, displayName: senderName)
         
         if let content = data["content"] as? String {
-                    self.content = content
-                    downloadURL = nil
-                } else if let urlString = data["url"] as? String, let url = URL(string: urlString) {
-                    downloadURL = url
-                    self.content = ""
-                } else {
-                    return nil
-                }
+            self.content = content
+            downloadURL = nil
+        } else if let urlString = data["url"] as? String, let url = URL(string: urlString) {
+            downloadURL = url
+            self.content = ""
+        } else {
+            return nil
+        }
     }
     
     var representation: [String : Any] {

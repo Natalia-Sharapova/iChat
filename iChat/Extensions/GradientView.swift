@@ -8,7 +8,7 @@
 import UIKit
 
 class GradientView: UIView {
-
+    
     private let gradientLayer = CAGradientLayer()
     
     enum Point {
@@ -47,7 +47,7 @@ class GradientView: UIView {
         }
     }
     
-   @IBInspectable private var startColor: UIColor? {
+    @IBInspectable private var startColor: UIColor? {
         didSet {
             setupGradientColors(startColor: startColor, endColor: endColor)
         }
@@ -89,7 +89,7 @@ class GradientView: UIView {
     private func setupGradientColors(startColor: UIColor?, endColor: UIColor?) {
         guard let startColor = startColor, let endColor = endColor else {
             return
-    }
+        }
         gradientLayer.colors = [startColor.cgColor, endColor.cgColor]
-}
+    }
 }

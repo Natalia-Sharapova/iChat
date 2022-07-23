@@ -11,21 +11,29 @@ import Firebase
 
 class AuthViewController: UIViewController {
     
+    // MARK: - Propeties
+    // ImageView
     let logoImageView = UIImageView(image: #imageLiteral(resourceName: "chat"), contentMode: .scaleAspectFit)
+    
+    // Buttons
     let emailButton = UIButton(title: "Email", backgroundColor: .black, titleColor: .white)
     let loginButton = UIButton(title: "Log in", backgroundColor: .white, titleColor: .purple, isShadow: true)
     let googleButton = UIButton(title: "Google", backgroundColor: .white, titleColor: .black, isShadow: true)
     
+   // Labels
     let googleLabel = UILabel(text: "Get started with", textColor: .black)
     let emailLabel = UILabel(text: "Or sign up with", textColor: .black)
     let alreadyOnboardLabel = UILabel(text: "Already onboard?", textColor: .black)
-
+    
     let signUpVC = SignUpViewController()
     let loginVC = LoginViewController()
     
+    // MARK: - ViewController methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        
+        view.backgroundColor = UIColor.milkWhite()
         
         signUpVC.delegate = self
         loginVC.delegate = self
@@ -39,6 +47,7 @@ class AuthViewController: UIViewController {
         googleButton.customizeGoogleButton()
     }
     
+    // MARK: - Methods
     @objc func emailButtonTapped() {
         present(signUpVC, animated: true, completion: nil)
     }
@@ -72,8 +81,10 @@ class AuthViewController: UIViewController {
                 UIApplication.getTopViewController()?.showAlert(with: "Oops, something went wrong", and: error.localizedDescription)
             }
         }
+    }
 }
-}
+
+// MARK: - Extensions
 extension AuthViewController {
     
     private func  setupConstrains() {
@@ -90,7 +101,7 @@ extension AuthViewController {
         
         let stackView = UIStackView(arrangedSubviews: [googleView, emailView, alreadyView], axis: .vertical, spacing: 40)
         stackView.translatesAutoresizingMaskIntoConstraints = false
-       
+        
         view.addSubview(stackView)
         stackView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 70).isActive = true
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true
@@ -109,6 +120,7 @@ extension AuthViewController: AuthNavDelegate {
     }
 }
 
+// MARK: - For Canvas mode
 import SwiftUI
 
 struct AuthViewControllerProvider: PreviewProvider {
@@ -125,5 +137,4 @@ struct ContainerView: UIViewControllerRepresentable {
     }
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
     }
-    
 }

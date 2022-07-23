@@ -10,9 +10,12 @@ import Kingfisher
 
 class WaitingChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     
+    //MARK: - Properties
+    //singletone
     static var reuseId = "WaitingChatCollectionViewCell"
+    
     let friendImageView = UIImageView()
-   
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .yellow
@@ -26,7 +29,8 @@ class WaitingChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-   
+    
+    //MARK: - Method
     func configure<U>(with value: U) where U : Hashable {
         
         guard let waitingChat: MChat = value as? MChat else { return }
@@ -34,12 +38,15 @@ class WaitingChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
         
         friendImageView.kf.setImage(with: url)
     }
-    
-  
+}
+
+//MARK: - Extension
+
+extension WaitingChatCollectionViewCell {
     
     private func setupConstrains() {
-    addSubview(friendImageView)
-    
+        addSubview(friendImageView)
+        
         friendImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             friendImageView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -47,8 +54,10 @@ class WaitingChatCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
             friendImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             friendImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
+    }
 }
-}
+
+// MARK: - For Canvas mode
 
 import SwiftUI
 

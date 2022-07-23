@@ -9,7 +9,8 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
-    // MARK: - Labels
+    // MARK: - Properties
+    // Labels
     let welcomeLabel = UILabel(text: "Welcome back!", textColor: .black, font: .avenir26()!)
     let loginWithLabel = UILabel(text: "Log in with", textColor: .black)
     let orLabel = UILabel(text: "or", textColor: .black)
@@ -17,7 +18,7 @@ class LoginViewController: UIViewController {
     let passwordLabel = UILabel(text: "Password", textColor: .black)
     let needAnAccountLabel = UILabel(text: "Need a account?", textColor: .black)
     
-    // MARK: - Buttons
+    // Buttons
     let googleButton = UIButton(title: "Google", cornerRadius: 5, backgroundColor: .white, titleColor: .black, font: .avenir20()!, isShadow: true)
     let loginButton = UIButton(title: "Log in", cornerRadius: 5, backgroundColor: .black, titleColor: .white, font: .avenir20()!)
     let signUpButton: UIButton = {
@@ -28,14 +29,17 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    // MARK: - Text fields
+    // Text fields
     let emailTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
     
     weak var delegate: AuthNavDelegate?
     
+    // MARK: - ViewController methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .white
         setupConstrains()
         googleButton.customizeGoogleButton()
@@ -45,15 +49,18 @@ class LoginViewController: UIViewController {
         googleButton.addTarget(self, action: #selector(googleButtonTapped), for: .touchUpInside)
     }
     
+    // MARK: - Methods
     @objc func loginButtonTapped() {
         
         AuthService.shared.signIn(email: emailTextField.text, password: passwordTextField.text) { result in
             switch result {
             
             case .success(let user):
+                
                 self.showAlert(with: "Success", and: "You're successfully logged in") {
                 FirestoreService.shared.getUserData(user: user) { result in
                     switch result {
+                    
                     case .success(let muser):
                         let mainTabBarVC = MainTabBarController(currentUser: muser)
                         mainTabBarVC.modalPresentationStyle = .fullScreen
@@ -76,7 +83,6 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func googleButtonTapped() {
-        
         AuthService.shared.googleLogin(viewController: self) { result in
             
             switch result {
@@ -101,6 +107,8 @@ class LoginViewController: UIViewController {
         }
 }
     }
+
+// MARK: - Extensions
 
 extension LoginViewController {
     
@@ -155,7 +163,7 @@ extension LoginViewController {
     }
 }
         
-
+// MARK: - For Canvas mode
 import SwiftUI
 
 struct LoginViewControllerProvider: PreviewProvider {

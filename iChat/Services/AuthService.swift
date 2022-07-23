@@ -12,9 +12,13 @@ import GoogleSignIn
 
 class AuthService {
     
+    // MARK: - Properties
+    // singleton
     static let shared = AuthService()
     private let auth = Auth.auth()
     
+    // MARK: - Methods
+    // registration with email
     func register(email: String?, password: String?, confirmPassword: String?, completion: @escaping (Result<User, Error>) -> Void) {
         
         guard Validators.isFull(email: email, password: password, confirmPassword: confirmPassword) else {
@@ -30,58 +34,50 @@ class AuthService {
             return
         }
         
+        // creating the user in the Firebase
         auth.createUser(withEmail: email!, password: password!) { result, error in
             guard let result = result else {
                 completion(.failure(error!))
                 return
             }
-            
             completion(.success(result.user))
         }
     }
     
-    
-    
-    
-    //
+    // registration with Google
     func googleLogin(viewController: UIViewController, completion: @escaping (Result<User, Error>) -> Void) {
+        
+        // check client ID
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+        
+        let config = GIDConfiguration(clientID: clientID)
+        
+        // sign in Google
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: viewController) { user, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            guard let authentication = user?.authentication,
+                  let idToken = authentication.idToken
+            else {
+                return
+            }
             
-            guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                           accessToken: authentication.accessToken)
             
-            let config = GIDConfiguration(clientID: clientID)
-            
-            GIDSignIn.sharedInstance.signIn(with: config, presenting: viewController) { user, error in
-                
-                if let error = error {
-                    print(error.localizedDescription)
+            Auth.auth().signIn(with: credential) { result, error in
+                guard let result = result else {
+                    completion(.failure(error!))
                     return
                 }
-                
-                guard
-                    let authentication = user?.authentication,
-                    let idToken = authentication.idToken
-                else {
-                    return
-                }
-                
-                let credential = GoogleAuthProvider.credential(withIDToken: idToken,
-                                                               accessToken: authentication.accessToken)
-                
-                Auth.auth().signIn(with: credential) { result, error in
-                    guard let result = result else {
-                        completion(.failure(error!))
-                        return
-                    }
-                    completion(.success(result.user))
-                }
+                completion(.success(result.user))
             }
         }
-    //
+    }
     
-    
-    
-    
-    
+    // sign in with email
     func signIn(email: String?, password: String?, completion: @escaping (Result<User, Error>) -> Void) {
         
         guard let email = email,

@@ -11,10 +11,12 @@ import FirebaseFirestore
 
 class ListenerService {
     
+    // MARK: - Properties
+    //singletone
     static let shared = ListenerService()
     
     private let dataBase = Firestore.firestore()
-
+    
     private var usersRef: CollectionReference {
         return dataBase.collection("users")
     }
@@ -23,19 +25,24 @@ class ListenerService {
         return Auth.auth().currentUser!.uid
     }
     
+    // users observer for adding to the PeopleViewController
     func usersObserver(users: [MUser], completion: @escaping (Result<[MUser], Error>) -> Void) -> ListenerRegistration? {
         
         var users = users
         
+        // create listener
         let usersListener = usersRef.addSnapshotListener { querySnapshot, error in
             guard let snapshot = querySnapshot else {
                 completion(.failure(error!))
                 return
             }
+            
+            // check differences
             snapshot.documentChanges.forEach { difference in
                 guard let muser = MUser(document: difference.document) else {
                     return
                 }
+                
                 switch difference.type {
                 case .added:
                     guard !users.contains(muser) else { return }
@@ -54,8 +61,9 @@ class ListenerService {
         return usersListener
     }
     
+    // waitingChats observer for adding to the ListViewController
     func waitingChatsObserver(chats: [MChat], completion: @escaping (Result<[MChat], Error>) -> Void) -> ListenerRegistration? {
-
+        
         var chats = chats
         
         let waitingChatsRef = dataBase.collection(["users", currentUserId, "waitingChats"].joined(separator: "/"))
@@ -65,7 +73,7 @@ class ListenerService {
             guard let snapshot = querySnapshot else {
                 completion(.failure(error!))
                 return
-        }
+            }
             snapshot.documentChanges.forEach { difference in
                 guard let chat = MChat(document: difference.document) else { return }
                 
@@ -82,12 +90,13 @@ class ListenerService {
                 }
             }
             completion(.success(chats))
-}
-return chatsListener
+        }
+        return chatsListener
     }
     
+    // activeChats observer for adding to the ListViewController
     func activeChatsObserver(chats: [MChat], completion: @escaping (Result<[MChat], Error>) -> Void) -> ListenerRegistration? {
-
+        
         var chats = chats
         
         let activeChatsRef = dataBase.collection(["users", currentUserId, "activeChats"].joined(separator: "/"))
@@ -97,7 +106,7 @@ return chatsListener
             guard let snapshot = querySnapshot else {
                 completion(.failure(error!))
                 return
-        }
+            }
             snapshot.documentChanges.forEach { difference in
                 guard let chat = MChat(document: difference.document) else { return }
                 
@@ -114,12 +123,13 @@ return chatsListener
                 }
             }
             completion(.success(chats))
-}
-return chatsListener
+        }
+        return chatsListener
     }
     
+    // message observer for adding to the ChatViewController
     func messageObserver(chat: MChat, completion: @escaping (Result<MMessage, Error>) -> Void) -> ListenerRegistration? {
- 
+        
         let reference = usersRef.document(currentUserId).collection("activeChats").document(chat.friendId).collection("messages")
         
         let messageListener = reference.addSnapshotListener { querySnapshot, error in
@@ -144,5 +154,5 @@ return chatsListener
             
         }
         return messageListener
-}
+    }
 }

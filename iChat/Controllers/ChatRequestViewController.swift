@@ -9,6 +9,8 @@ import UIKit
 
 class ChatRequestViewController: UIViewController {
     
+    // MARK: - Properties
+    
     let contaiterView = UIView()
     let imageView = UIImageView(image: #imageLiteral(resourceName: "human7"), contentMode: .scaleAspectFill)
     let nameLabel = UILabel(text: "Monica Bell", textColor: .black, font: .systemFont(ofSize: 20, weight: .light))
@@ -17,9 +19,8 @@ class ChatRequestViewController: UIViewController {
     let denyButton = UIButton(title: "Deny", cornerRadius: 10, backgroundColor: #colorLiteral(red: 0.968627451, green: 0.9725490196, blue: 0.9921568627, alpha: 1), titleColor: .red, font: .laoSangamMN20()!, isShadow: false)
     
     private var chat: MChat
-    
     weak var delegate: WaitingChatNavigation?
-   
+    
     init(chat: MChat) {
         
         self.chat = chat
@@ -32,9 +33,11 @@ class ChatRequestViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - ViewController methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupConstrains()
         customizeElements()
         
@@ -47,19 +50,19 @@ class ChatRequestViewController: UIViewController {
         self.acceptButton.applyGradient(cornerRadius: 10)
     }
     
-   @objc private func denyButtonTapped() {
-    
-    self.dismiss(animated: true) {
-        self.delegate?.removeWaitingChat(chat: self.chat)
-    }
+    // MARK: - Methods
+    @objc private func denyButtonTapped() {
+        
+        self.dismiss(animated: true) {
+            self.delegate?.removeWaitingChat(chat: self.chat)
+        }
     }
     
     @objc func acceptButtonTapped() {
         self.dismiss(animated: true) {
             self.delegate?.changeToActive(chat: self.chat)
-        
-     }
-     }
+        }
+    }
     
     private func customizeElements() {
         
@@ -71,11 +74,12 @@ class ChatRequestViewController: UIViewController {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         aboutLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        contaiterView.backgroundColor = #colorLiteral(red: 0.968627451, green: 0.9725490196, blue: 0.9921568627, alpha: 1)
+        contaiterView.backgroundColor = UIColor.milkWhite()
         contaiterView.layer.cornerRadius = 30
-}
+    }
 }
 
+// MARK: - Extensions
 extension ChatRequestViewController {
     
     private func setupConstrains() {
@@ -104,7 +108,7 @@ extension ChatRequestViewController {
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             imageView.bottomAnchor.constraint(equalTo: contaiterView.topAnchor, constant: 30),
             imageView.topAnchor.constraint(equalTo: view.topAnchor),
-        
+            
             nameLabel.leadingAnchor.constraint(equalTo: contaiterView.leadingAnchor, constant: 24),
             nameLabel.trailingAnchor.constraint(equalTo: contaiterView.trailingAnchor, constant: -24),
             nameLabel.topAnchor.constraint(equalTo: contaiterView.topAnchor, constant: 35),
@@ -118,6 +122,5 @@ extension ChatRequestViewController {
             buttonsStackView.topAnchor.constraint(equalTo: aboutLabel.bottomAnchor, constant: 24),
             buttonsStackView.heightAnchor.constraint(equalToConstant: 52)
         ])
-        
     }
 }

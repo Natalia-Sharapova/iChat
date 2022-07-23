@@ -10,29 +10,31 @@ import FirebaseAuth
 import Kingfisher
 
 class SetupProfileViewController: UIViewController {
-
+    
+    // MARK: - Properties
+    // ImageView
     let fullImageView = PhotoView()
     
-    // MARK: - Labels
+    // Labels
     let welcomeLabel = UILabel(text: "Set up profile", textColor: .black, font: .avenir26()!)
     let fullNameLabel = UILabel(text: "Full name", textColor: .black)
     let aboutMeLabel = UILabel(text: "About me", textColor: .black)
     let sexLabel = UILabel(text: "Sex", textColor: .black)
     
-    // MARK: - Text fields
+    // Text fields
     let fullNameTextField = OneLineTextField(font: .avenir20())
     let aboutMeTextField = OneLineTextField(font: .avenir20())
     
-    // MARK: - UISegmentedControl
+    // UISegmentedControl
     let sexSegmentedControl = UISegmentedControl(first: "Male", second: "Female")
     
-    // MARK: - Button
+    // Button
     let goToChatsButton = UIButton(title: "Go to chats!", cornerRadius: 5, backgroundColor: .black, titleColor: .white, font: .avenir20()!)
     
     private let currentUser: User
     
     init(currentUser: User) {
-      
+        
         self.currentUser = currentUser
         super.init(nibName: nil, bundle: nil)
         
@@ -48,6 +50,8 @@ class SetupProfileViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - ViewController methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -57,7 +61,9 @@ class SetupProfileViewController: UIViewController {
         fullImageView.plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
     }
     
+    // MARK: - Methods
     @objc func goToChatsButtonTapped() {
+        
         FirestoreService.shared.saveProfileWith(id: currentUser.uid,
                                                 email: currentUser.email!,
                                                 username: fullNameTextField.text,
@@ -71,15 +77,12 @@ class SetupProfileViewController: UIViewController {
                     let mainTabBarVC = MainTabBarController(currentUser: muser)
                     mainTabBarVC.modalPresentationStyle = .fullScreen
                     self.present(mainTabBarVC, animated: true, completion: nil)
-                    print(#function, "success")
                 }
-                print(#function, muser)
             case .failure(let error):
                 self.showAlert(with: "Opps", and: error.localizedDescription)
-                print(#function, String(describing: error))
             }
-    }
         }
+    }
     
     @objc func plusButtonTapped() {
         let imagePickerController = UIImagePickerController()
@@ -89,6 +92,9 @@ class SetupProfileViewController: UIViewController {
     }
 }
 
+// MARK: - Extensions
+// MARK: - UINavigationControllerDelegate, UIImagePickerControllerDelegate
+
 extension SetupProfileViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
@@ -96,39 +102,35 @@ extension SetupProfileViewController: UINavigationControllerDelegate, UIImagePic
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
             return
         }
-        
         fullImageView.circleImageView.image = image
     }
 }
 
 // MARK: - Setup constrains
-
 extension SetupProfileViewController {
+    
     private func setupConstrains() {
-        
-        // MARK: - Full imageView
         
         view.addSubview(fullImageView)
         
-        // MARK: - StackViews
-        
+        //StackViews
         let fullNameStackView = UIStackView(arrangedSubviews: [
-        fullNameLabel,
-        fullNameTextField
+            fullNameLabel,
+            fullNameTextField
         ],
         axis: .vertical,
         spacing: 0)
         
         let aboutMeStackView = UIStackView(arrangedSubviews: [
-        aboutMeLabel,
-        aboutMeTextField
+            aboutMeLabel,
+            aboutMeTextField
         ],
         axis: .vertical,
         spacing: 0)
         
         let sexStackView = UIStackView(arrangedSubviews: [
-        sexLabel,
-        sexSegmentedControl
+            sexLabel,
+            sexSegmentedControl
         ],
         axis: .vertical,
         spacing: 10)
@@ -136,7 +138,7 @@ extension SetupProfileViewController {
         goToChatsButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         let stackView = UIStackView(arrangedSubviews: [
-        fullNameStackView,
+            fullNameStackView,
             aboutMeStackView,
             sexStackView,
             goToChatsButton
@@ -163,6 +165,8 @@ extension SetupProfileViewController {
         
     }
 }
+
+// MARK: - For Canvas mode
 
 import SwiftUI
 

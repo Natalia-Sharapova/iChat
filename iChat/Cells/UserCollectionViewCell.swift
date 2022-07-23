@@ -10,10 +10,13 @@ import Kingfisher
 
 class UserCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     
+    // MARK: - Properties
+    
     let userImageView = UIImageView()
     let userNameLabel = UILabel(text: "text", textColor: .black, font: .laoSangamMN18()!)
     let containerView = UIView()
     
+    //identifier
     static var reuseId = "UserCollectionViewCell"
     
     override init(frame: CGRect) {
@@ -42,7 +45,9 @@ class UserCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     override func prepareForReuse() {
         userImageView.image = nil
     }
-  
+    
+    // MARK: - Method
+    
     func configure<U>(with value: U) where U : Hashable {
         guard let user: MUser = value as? MUser else { return }
         
@@ -51,6 +56,11 @@ class UserCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
         userNameLabel.text = user.userName
         
     }
+}
+
+// MARK: - Extension
+extension UserCollectionViewCell {
+    
     private func setupConstrains() {
         userImageView.translatesAutoresizingMaskIntoConstraints = false
         userNameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -68,7 +78,7 @@ class UserCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
         ])
         NSLayoutConstraint.activate([
             userImageView.topAnchor.constraint(equalTo: containerView.topAnchor),
-                                        userImageView.heightAnchor.constraint(equalTo: containerView.widthAnchor),
+            userImageView.heightAnchor.constraint(equalTo: containerView.widthAnchor),
             userImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             userImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
         ])
@@ -77,12 +87,10 @@ class UserCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
             userNameLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
             userNameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8)
         ])
-        
     }
-    
-    
-    
 }
+
+//MARK: - For Canvas mode
 
 import SwiftUI
 

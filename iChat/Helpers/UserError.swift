@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - Enum for describing an errors
 enum UserError {
     case photoNotExist
     case notFull
@@ -15,9 +16,10 @@ enum UserError {
 }
 
 extension UserError: LocalizedError {
+    
     var errorDescription: String? {
-        switch self {
         
+        switch self {
         case .photoNotExist:
             return NSLocalizedString("No photo selected", comment: "")
         case .notFull:
@@ -27,5 +29,5 @@ extension UserError: LocalizedError {
         case .canNotUnwrapToMUser:
             return NSLocalizedString("Impossible to convert MUser from User", comment: "")
         }
-}
+    }
 }

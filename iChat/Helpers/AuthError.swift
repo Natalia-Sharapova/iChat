@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - Enum for describing an errors
 enum AuthError {
     case notFull
     case invalidEmail
@@ -18,8 +19,8 @@ enum AuthError {
 extension AuthError: LocalizedError {
     
     var errorDescription: String? {
-        switch self {
         
+        switch self {
         case .notFull:
             return NSLocalizedString("Fill all fields", comment: "")
         case .invalidEmail:

@@ -9,13 +9,14 @@ import UIKit
 
 
 class CustomTextField: UITextField {
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         backgroundColor = .white
         placeholder = "Write something here"
         font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        
         clearButtonMode = .whileEditing
         borderStyle = .none
         layer.cornerRadius = 18
@@ -24,6 +25,7 @@ class CustomTextField: UITextField {
         let image = UIImage(systemName: "face.smiling")
         let imageView = UIImageView(image: image)
         imageView.setupColor(color: .lightGray)
+        
         leftView = imageView
         leftView?.frame = CGRect(x: 0, y: 0, width: 19, height: 19)
         leftViewMode = .always
@@ -64,5 +66,4 @@ class CustomTextField: UITextField {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }

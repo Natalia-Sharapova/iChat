@@ -12,7 +12,7 @@ class SectionHeader: UICollectionReusableView {
     static let reuseId = "SectionHeader"
     
     let titleLabel = UILabel()
-        
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -31,7 +31,7 @@ class SectionHeader: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
     
-     func configure(text: String, font: UIFont?, textColor: UIColor) {
+    func configure(text: String, font: UIFont?, textColor: UIColor) {
         titleLabel.text = text
         titleLabel.font = font
         titleLabel.textColor = textColor

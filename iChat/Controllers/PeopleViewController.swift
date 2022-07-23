@@ -11,12 +11,13 @@ import FirebaseFirestore
 
 class PeopleViewController: UIViewController {
     
+    // MARK: - Properties
+    
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, MUser>?
     var users = [MUser]()
     
     private var usersListener: ListenerRegistration?
-    
     private let currentUser: MUser
     
     init(currentUser: MUser) {
@@ -33,6 +34,7 @@ class PeopleViewController: UIViewController {
         usersListener?.remove()
     }
     
+    // Enum for section name
     enum Section: Int, CaseIterable {
         case users
         func description(usersCount: Int) -> String {
@@ -42,20 +44,22 @@ class PeopleViewController: UIViewController {
             }
         }
     }
+    // MARK:- ViewController methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = UIColor(red: 247, green: 248, blue: 253, alpha: 1)
+        
+        view.backgroundColor = UIColor.milkWhite()
         setupCollectionView()
         setupSearchBar()
         createDataSource()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(signOut))
         
-       usersListener = ListenerService.shared.usersObserver(users: users) { result in
-            switch result {
+        // People observer
+        usersListener = ListenerService.shared.usersObserver(users: users) { result in
             
+            switch result {
             case .success(let users):
                 self.users = users
                 self.reloadData(with: nil)
@@ -65,20 +69,25 @@ class PeopleViewController: UIViewController {
         }
     }
     
+    // MARK: - Methods
+    
     @objc func signOut() {
+        
         let alertController = UIAlertController(title: nil, message: "Are u sure u want to sign out?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let signOutAction = UIAlertAction(title: "Sign out", style: .destructive) { _ in
+            
             do {
                 try Auth.auth().signOut()
                 UIApplication.shared.keyWindow?.rootViewController = AuthViewController()
+                
             } catch {
                 print("Error signing out:", error.localizedDescription)
             }
         }
+        
         alertController.addAction(cancelAction)
         alertController.addAction(signOutAction)
-        
         present(alertController, animated: true, completion: nil)
     }
     
@@ -104,8 +113,8 @@ class PeopleViewController: UIViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
     }
-  
-private func reloadData(with searchText: String?)  {
+    
+    private func reloadData(with searchText: String?)  {
         
         let filtered = users.filter { (user) -> Bool in
             user.contains(filter: searchText)
@@ -115,19 +124,21 @@ private func reloadData(with searchText: String?)  {
         snapShot.appendSections([.users])
         snapShot.appendItems(filtered, toSection: .users)
         dataSource?.apply(snapShot, animatingDifferences: true)
-        }
+    }
 }
 
+// MARK:- Extensions
 // MARK: - UISearchBarDelegate
 
 extension PeopleViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    reloadData(with: searchText)
+        reloadData(with: searchText)
     }
 }
 
 // MARK: - UICollectionViewDelegate
 extension PeopleViewController: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let user = self.dataSource?.itemIdentifier(for: indexPath) else { return }
         let profileViewController = ProfileViewController(user: user)
@@ -150,6 +161,7 @@ extension PeopleViewController {
                 return self.createUsersSection()
             }
         }
+        
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 20
         layout.configuration = config
@@ -193,16 +205,16 @@ extension PeopleViewController {
         
         return sectionHeader
     }
-    }
-    
-    extension PeopleViewController {
-        private func createDataSource() {
-            
-                dataSource = UICollectionViewDiffableDataSource<Section, MUser>(
-                collectionView: collectionView, cellProvider: { (collectionView, indexPath, user) in
+}
+
+extension PeopleViewController {
+    private func createDataSource() {
+        
+        dataSource = UICollectionViewDiffableDataSource<Section, MUser>(
+            collectionView: collectionView, cellProvider: { (collectionView, indexPath, user) in
                 
                 guard let section = Section(rawValue: indexPath.section) else {
-                fatalError("Unknown section kind")
+                    fatalError("Unknown section kind")
                 }
                 switch section {
                 case .users:
@@ -212,23 +224,24 @@ extension PeopleViewController {
                                           for: indexPath)
                 }
             })
-            dataSource?.supplementaryViewProvider = {
-                collectionView, kind, indexPath in
-                
-                guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseId, for: indexPath) as? SectionHeader else { return nil }
-                
-                guard let section = Section(rawValue: indexPath.section) else { return nil }
-                
-                let items = self.dataSource?.snapshot().itemIdentifiers(inSection: .users)
-                sectionHeader.configure(text: section.description(usersCount: items?.count ?? 0),
-                                        font: .systemFont(ofSize: 36, weight: .light),
-                                        textColor: #colorLiteral(red: 0.5725490196, green: 0.5725490196, blue: 0.5725490196, alpha: 1))
-                
-                return sectionHeader
-            }
+        dataSource?.supplementaryViewProvider = {
+            collectionView, kind, indexPath in
+            
+            guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseId, for: indexPath) as? SectionHeader else { return nil }
+            
+            guard let section = Section(rawValue: indexPath.section) else { return nil }
+            
+            let items = self.dataSource?.snapshot().itemIdentifiers(inSection: .users)
+            sectionHeader.configure(text: section.description(usersCount: items?.count ?? 0),
+                                    font: .systemFont(ofSize: 36, weight: .light),
+                                    textColor: #colorLiteral(red: 0.5725490196, green: 0.5725490196, blue: 0.5725490196, alpha: 1))
+            
+            return sectionHeader
         }
     }
+}
 
+// MARK: - For Canvas mode
 import SwiftUI
 
 struct PeopleViewControllerProvider: PreviewProvider {

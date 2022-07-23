@@ -9,13 +9,18 @@ import UIKit
 import FirebaseFirestore
 
 class ListViewController: UIViewController {
-
-    var collectionView: UICollectionView!
     
+    //MARK: - Properties
+    var collectionView: UICollectionView!
     private var waitingChatsListener: ListenerRegistration?
     private var activeChatsListener: ListenerRegistration?
-    
     private let currentUser: MUser
+    
+    
+    var waitingChats = [MChat]()
+    var activeChats = [MChat]()
+    
+    var dataSource: UICollectionViewDiffableDataSource<Section, MChat>?
     
     init(currentUser: MUser) {
         self.currentUser = currentUser
@@ -32,9 +37,7 @@ class ListViewController: UIViewController {
         activeChatsListener?.remove()
     }
     
-    var waitingChats = [MChat]()
-    var activeChats = [MChat]()
-    
+    // Enum for sections name
     enum Section: Int, CaseIterable {
         case waitingChats
         case activeChats
@@ -49,8 +52,7 @@ class ListViewController: UIViewController {
         }
     }
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, MChat>?
-    
+    //MARK: - ViewController methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -59,27 +61,29 @@ class ListViewController: UIViewController {
         createDataSource()
         reloadData()
         
-        view.backgroundColor = UIColor(red: 247, green: 248, blue: 253, alpha: 1)
+        view.backgroundColor = UIColor.milkWhite()
         
+        // Observe waiting chats
         waitingChatsListener = ListenerService.shared.waitingChatsObserver(chats: waitingChats, completion: { result in
             
             switch result {
             case .success(let chats):
-                
                 self.waitingChats = chats
-                
                 if self.waitingChats != [], self.waitingChats.count <= chats.count {
+                    
                     let chatRequestViewController = ChatRequestViewController(chat: chats.last!)
                     chatRequestViewController.delegate = self
                     self.present(chatRequestViewController, animated: true, completion: nil)
                 }
                 self.reloadData()
+                
             case .failure(let error):
                 self.showAlert(with: "Error", and: error.localizedDescription)
             }
         })
         
-       activeChatsListener = ListenerService.shared.activeChatsObserver(chats: activeChats, completion: { result in
+        // Observe active chats
+        activeChatsListener = ListenerService.shared.activeChatsObserver(chats: activeChats, completion: { result in
             
             switch result {
             case .success(let chats):
@@ -92,20 +96,19 @@ class ListViewController: UIViewController {
             }
         })
     }
-  
+    
     private func reloadData() {
-        
         var snapShot = NSDiffableDataSourceSnapshot<Section, MChat>()
         snapShot.appendSections([.waitingChats,.activeChats])
         snapShot.appendItems(waitingChats, toSection: .waitingChats)
         snapShot.appendItems(activeChats, toSection: .activeChats)
         dataSource?.apply(snapShot, animatingDifferences: true)
-        }
+    }
     
-
     private func setupSearchBar() {
         navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.968627451, green: 0.9725490196, blue: 0.9921568627, alpha: 1)
         navigationController?.navigationBar.shadowImage = UIImage()
+        
         let searchController = UISearchController(searchResultsController: nil)
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -133,24 +136,25 @@ class ListViewController: UIViewController {
 // MARK: - Setup data source
 
 extension ListViewController {
-
+    
     private func createDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, chat) in
+            
             guard let section = Section(rawValue: indexPath.section) else {
-            fatalError("Unknown section kind")
+                fatalError("Unknown section kind")
             }
             
             switch section {
             case .waitingChats:
                 return self.configure(collectionView: collectionView,
-                                 cellType: WaitingChatCollectionViewCell.self,
-                                 with: chat,
-                                 for: indexPath)
+                                      cellType: WaitingChatCollectionViewCell.self,
+                                      with: chat,
+                                      for: indexPath)
             case .activeChats:
                 return self.configure(collectionView: collectionView,
-                                 cellType: ActiveChatCollectionViewCell.self,
-                                 with: chat,
-                                 for: indexPath)
+                                      cellType: ActiveChatCollectionViewCell.self,
+                                      with: chat,
+                                      for: indexPath)
             }
         })
         
@@ -187,7 +191,7 @@ extension ListViewController {
                 return self.createActiveChats()
             }
         }
-       
+        
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 20
         layout.configuration = config
@@ -213,30 +217,30 @@ extension ListViewController {
         return section
     }
     
-   private func createWaitingChats() -> NSCollectionLayoutSection {
-      
-    let itemSize = NSCollectionLayoutSize(
-        widthDimension: .fractionalWidth(1),
-        heightDimension: .fractionalHeight(1))
-    
-    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-    
-    let groupSize = NSCollectionLayoutSize(
-        widthDimension: .absolute(88),
-        heightDimension: .absolute(88))
-    
-    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-    
-    let section = NSCollectionLayoutSection(group: group)
-    section.orthogonalScrollingBehavior = .continuous
-    
-    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 29, bottom: 0, trailing: 20)
-    section.interGroupSpacing = 16
-    
-   let sectionHeader = createSectionHeader()
-    section.boundarySupplementaryItems = [sectionHeader]
-    return section
-    
+    private func createWaitingChats() -> NSCollectionLayoutSection {
+        
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .fractionalHeight(1))
+        
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .absolute(88),
+            heightDimension: .absolute(88))
+        
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuous
+        
+        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 29, bottom: 0, trailing: 20)
+        section.interGroupSpacing = 16
+        
+        let sectionHeader = createSectionHeader()
+        section.boundarySupplementaryItems = [sectionHeader]
+        return section
+        
     }
     
     private func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
@@ -268,7 +272,7 @@ extension ListViewController: UICollectionViewDelegate {
             chatRequestViewController.delegate = self
             present(chatRequestViewController, animated: true, completion: nil)
         case .activeChats:
-         let chatsViewController = ChatsViewController(user: currentUser, chat: chat)
+            let chatsViewController = ChatsViewController(user: currentUser, chat: chat)
             navigationController?.pushViewController(chatsViewController, animated: true)
             
         }
@@ -315,6 +319,8 @@ extension ListViewController: UISearchBarDelegate {
         print(searchText)
     }
 }
+
+// MARK: - For Canvas mode
 
 import SwiftUI
 
