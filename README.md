@@ -24,6 +24,14 @@
 #### Если он одобрит ваш запрос, вы перейдете на экран чата
 #### В приложении внедрена возможность отправлять картинки и время отправки сообщений
 
+## Инструкция по установке:
+
+#### 1. Скопируйте ссылку на репозиторий: https://github.com/Natalia-Sharapova/iChat.git
+#### 2. Вставьте ее в Xcode, нажав на Clone an existing progect
+#### 3. Нажмите кнопку Clone
+#### 4. Нажмите на кнопку No schemes сверху, и нажмите Ок
+#### 5. Запустите проект
+
 ## Скриншоты представлены ниже:
 ![Screenshot](https://github.com/Natalia-Sharapova/iChat/blob/main/iChat/Screenshots/Screenshot01.png?raw=true)
 ![Screenshot](https://github.com/Natalia-Sharapova/iChat/blob/main/iChat/Screenshots/Screenshot02.png?raw=true)
@@ -36,6 +44,4 @@
 ![Screenshot](https://github.com/Natalia-Sharapova/iChat/blob/main/iChat/Screenshots/Screenshot09.png?raw=true)
 ![Screenshot](https://github.com/Natalia-Sharapova/iChat/blob/main/iChat/Screenshots/Screenshot10.png?raw=true)
 ![Screenshot](https://github.com/Natalia-Sharapova/iChat/blob/main/iChat/Screenshots/Screenshot11.png?raw=true)
-
-
 
